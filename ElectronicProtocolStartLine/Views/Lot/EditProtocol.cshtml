@@ -1,0 +1,219 @@
+﻿@model ElectronicProtocolStartLine.GetProtocol
+
+@{
+    ViewBag.Title = "EditProtocol";
+    string Green = "background-color: lightgreen";
+    string Yellow = "background-color: lightgray";
+    string Red = "background-color: lightcoral";
+    string st = "";
+}
+
+<head>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+</head>
+
+<div style="display: block; margin:2px;">
+    <div>@Html.ActionLink("Вернутся к списку протоколов", "Index", new { LOTID = Model.LOTID}, htmlAttributes: new { @class = "btn btn-success" })</div>    
+    <div>  @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = Model.ID, LOTID = Model.LOTID, NameProtocol = Model.NameProtocol, NameOrder = Model.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" }) </div>
+</div>
+
+<h2>Просмотр протокола</h2>
+@*<h3>Служба - @Session["Service"] </h3>
+<h3>Пользователь - @Session["Name"]</h3>*@
+
+@if (TempData["Success"] != null)
+{
+    <H2 class="alert btn-success">
+        @TempData["Success"]
+    </H2>
+}
+
+    <div style="display: block; align-items: baseline; margin: 4%">
+        <h4>Сторона @Model.TOPBOT</h4>
+        <h1>Протокол - @Model.NameProtocol </h1>
+
+        @if (TempData[$"Er"] != null)
+        {
+            @Html.Label(TempData[$"Er"].ToString(), htmlAttributes: new { @class = "alert alert-danger" })
+        }
+
+        @foreach (var ListItem in Model.ListProtocol)
+        {
+            if (ListItem.Details.Count != 0) // FAS
+            {
+
+                @Html.AntiForgeryToken()
+                <div id="form" style="border-top: 1px solid gray; border-bottom: 5px dashed black; background-color: khaki; padding-bottom:2%; margin-bottom: 3.5%; height:750px; overflow-y: scroll;">
+
+                    <h1 style="text-align: center"> @ListItem.Name </h1>
+
+                    @foreach (var item in ListItem.Details)
+                    {
+
+                        using (Html.BeginForm("EditDetails", "Home", FormMethod.Post))
+                        {
+                      
+                                @Html.HiddenFor(model => @Model.ID)
+                                @Html.HiddenFor(model => @item.ID)
+                                @Html.HiddenFor(model => Model.TOPBOT)
+                                @Html.HiddenFor(model => Model.LOTID)
+                                
+                           
+                            @*<div style=" display: inline-flex; align-items:center; margin: 1%; ">*@
+                            <div style=" display: block; padding:1%; width: 100%;">
+
+                                @if (TempData[$"Er{item.ID}"] != null)
+                                {
+                                    @Html.Label(TempData[$"Er{item.ID}"].ToString(), htmlAttributes: new { @class = "alert alert-danger" })
+                                }
+
+                                <div style="border-top: 2px solid double white">
+                                    <h3>@item.TypeVerification</h3>
+                                </div>
+
+                                <div style="display: flex; align-items:center; border-bottom: 0.5px solid gray;  border-top: 0.5px solid gray; margin: 0.5%; background-color: darkkhaki; width:100%">
+                                    <div style="display:block">
+                                        <div>
+                                            @Html.Label("Выберите данные о проверки")
+                                        </div>
+                                        <div style="margin: 1%">
+                                            <div style="display:flex; margin: 3px;">
+                                                <div style="display:block; font-size: 18px;">
+                                                    OK:
+                                                    <div>
+                                                        @Html.RadioButton("Result", "OK")
+                                                    </div>
+                                                </div>
+                                                <div style="display:block; font-size: 18px;">
+                                                    NOK:
+                                                    <div>
+                                                        @Html.RadioButton("Result", "NOK")
+                                                    </div>
+                                                </div>
+                                                <div style="display:block; font-size: 18px;">
+                                                    N/A:
+                                                    <div>
+                                                        @Html.RadioButton("Result", "N/A")
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div style="display:block; margin: 1%;">
+
+                                        <div>
+                                            @Html.Label("Отсканируйте бейджик для подтверждения")
+                                        </div>
+
+                                        <div>
+                                            @Html.TextBoxFor(model => item.RFID,new  { @class = "form-control", @type = "password", @Value = "" }  )
+                                        </div>
+
+                                    </div>
+
+                                    <div style="display:block; margin: 1%;">
+                                        <div>
+                                            @Html.Label("Описание")
+                                        </div>
+                                        <div>
+                                            @Html.TextAreaFor(model => item.Description, new { @class = "form-control", @maxlength = "500", @value = "" })
+                                            @Html.HiddenFor(model => item.Description)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-IDgroup">
+                                        <input type="submit" value="Сохранить" class="btn btn-default" />
+                                    </div>
+
+                                    @{
+                                        if (item.LastResult != null)
+                                        {                                        
+                                            if (item.LastResult == "OK") {
+                                                st = Green;
+                                            }
+                                            else if (item.LastResult == "NOK")
+                                            {
+                                                st = Red;
+                                            }
+                                            else
+                                            {
+                                                st = Yellow;
+                                            }
+
+                                        
+
+
+                                            <div style='display:block; align-content: center; margin:2%;padding:2%; background-color: aliceblue' >
+
+                                                <div style="font-size:20px;">
+                                                    <label> Результат проверки : </label>
+                                                    <label style="@st"> @item.LastResult  </label>  
+                                                </div>
+
+                                                <div>
+                                                    <label> Пользователь :</label>
+                                                    <label > @item.LastUserResult </label>
+                                                </div>
+
+                                                   <div>
+                                                    <label> Описание к проверке :</label>
+                                                    <label> @item.Description </label>
+                                                </div>
+
+                                            </div>
+                                        }
+                                     }
+
+
+
+                                </div>
+
+
+                            </div>
+                            @*</div>*@
+                        }
+
+                    }
+                </div>
+
+            }
+        }
+
+        @*@Html.Action("GetReportProtocol","Lot", new { @ID = Model.ID, @NameProtocol = Model.Name, @NameOrder = Model. })*@
+
+
+
+
+    </div>
+
+<script>
+
+    //var scrolls = $(this).scrollTop();
+
+    $(window).scroll(function () {
+        sessionStorage.scrollTop = $(this).scrollTop();
+    });
+
+  
+
+    $(document).ready(function () {
+        if (sessionStorage.scrollTop != "undefined") {
+            $(window).scrollTop(sessionStorage.scrollTop);
+            //$("#form").scrollTop(scrolls);
+        }
+        //if (scrolls != "undefined" ) {
+        //    $("#form").scrollTop(scrolls);
+        //}
+    });
+
+
+</script>
+
+    
+
+
+
+
+

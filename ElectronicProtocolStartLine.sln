@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronicProtocolStartLine", "ElectronicProtocolStartLine\ElectronicProtocolStartLine.csproj", "{DB8AFBC6-A44B-4322-BBE7-F0CB0A433B7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB8AFBC6-A44B-4322-BBE7-F0CB0A433B7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB8AFBC6-A44B-4322-BBE7-F0CB0A433B7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB8AFBC6-A44B-4322-BBE7-F0CB0A433B7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB8AFBC6-A44B-4322-BBE7-F0CB0A433B7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {474DB5ED-9CFB-401B-9CA9-F111404853C7}
+	EndGlobalSection
+EndGlobal

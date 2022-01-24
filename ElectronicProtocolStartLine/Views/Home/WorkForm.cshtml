@@ -1,0 +1,177 @@
+﻿@model ElectronicProtocolStartLine.Class.Orders.HomePage
+
+<head>
+    <script src="~/Scripts/jquery-3.4.1.intellisense.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+</head>
+
+<div style="display:flex; align-items:flex-start">
+    <div>
+        @if (@Session["Name"].ToString().Contains("Володин"))
+        {
+          @Html.ActionLink("Включить мониторинг протокола", "Index", "Monitoring", "", new { @class = "btn btn-info" })
+        }
+
+        @*@if (false)
+        {
+            using (Html.BeginForm("Index", "CreateProtocol", FormMethod.Post))
+            {
+             <input class="btn btn-warning" style="max-width:400px; width:auto" type="submit" value="Создать протокол" />
+            }
+        }*@
+
+        @Html.ActionLink("Выйти из учетной записи", "Index", "", htmlAttributes: new { @class = "btn btn-disabled" })
+    </div>
+    @if (Model.ProtocolsStart.Count != 0)  
+    {   
+        <div style=" margin-left: 65%">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="4">Запущенные протоколы в работе</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Имя заказа
+                        </th>
+                        <th>
+                            Имя протокола
+                        </th>
+                        <th>
+                            Сторона
+                        </th>
+                        <th>
+                            Дата запуска
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                   @foreach (var item in Model.ProtocolsStart)
+                   {
+                    <tr>
+                        <th>
+                            @Html.DisplayFor(c => item.NameOrder)
+                        </th>
+                        <th>
+                            @Html.DisplayFor(c => item.NameProtocol)
+                        </th>
+
+                        <th>
+                            @Html.DisplayFor(c => item.TOPBOT)
+                        </th>
+                        <th>
+                            @Html.DisplayFor(c => item.DateCreate)
+                        </th>
+                    </tr>
+                   }
+                </tbody>
+
+            </table>
+        </div>
+    }
+</div>
+
+
+
+
+
+<h1> Таблица активных заказов </h1>
+
+
+<div class="TableLots">
+    <table class="table">
+        <tr>           
+            <th>Тип заказа </th>
+            <th>Заказичк </th>
+            <th>Имя Заказа  </th>
+            <th>Дата создания  </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.orders)
+        {
+            <tr>               
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeClient)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameClient)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NameOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreate)
+                </td>
+                <td class="OpenLot">                   
+                    @Html.ActionLink("Открыть Протоколы", "Index", "Lot", new { LOTID = item.ID, mode = "Open" }, new { @class = "btn btn-success", @style = "background-color:cornflowerblue" })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<div style="margin-top: 3%;" >@Html.Action("Index", "Log", new { ProtocolID = 0 , top = true})</div>
+
+
+
+
+<style>
+
+    .TableLots .OpenLot {
+        border-left: 1px dotted gray;
+        text-align: center;
+        font-size: 30px;        
+    }
+
+    .TableLots {
+/*        height: auto;
+        max-height: 700px;
+        min-height: 400px;*/
+    }
+
+    .TableLots thead {
+        align-items: center;
+        position: sticky;
+        top: 0px;
+        border: 5px solid black;
+    }
+
+    .TableLots th {
+        align-content: center;
+        text-align: left;
+        background-color: gold;
+        border-top: 2px solid black;
+    }
+
+    .TableLots  td {
+        width: 10%;
+        overflow: visible;
+        align-items: baseline;
+        text-align: left;
+        padding: 2%;
+        margin: 1%;
+        border-bottom: 2px dotted gray;
+        border-left:0.3px solid gray;
+    }
+
+    .table {
+        overflow-y:auto;
+        max-height: 500px;
+        min-height:400px;
+        height:auto;
+        font-size: 14px;
+        background-color: antiquewhite;
+    }
+
+    .table  tr:nth-child(odd) {
+        background-color: #EAF2D3;
+    }
+</style>
+
+<script>
+
+</script>
+
+

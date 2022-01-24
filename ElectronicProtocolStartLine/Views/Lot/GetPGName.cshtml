@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ElectronicProtocolStartLine.Class.Protocols.Programms>
+@*@Html.ActionLink("Вернуться назад", "Index", "Lot")*@
+@*<h1>Служба - @Session["Service"] </h1>
+<h1>@Session["Name"]</h1>*@
+
+<div style="margin:1%">
+    <div>
+        <h2> Список программ у оборудования </h2>
+    </div>
+    <div>
+        <h2>Заказ - @Model.FirstOrDefault().NameOrder</h2>
+        <h3>Протокол - @Model.FirstOrDefault().ProtocolName</h3>
+    </div>
+</div>
+@foreach (var item in new List<string>() { "TOP", "BOT" })
+{
+    <h2>Сторона - @item</h2>
+    <table class="table">
+        <tr>
+            <th>
+                Оборудование
+            </th>
+            <th>
+                Программа
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var i in Model.Where(c => c.TOPBOT == item))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => i.Machine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => i.PGName)
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+

@@ -1,0 +1,272 @@
+﻿@model ElectronicProtocolStartLine.Class.ProtocolReport
+
+@*<h1>Служба - @Session["Service"] </h1>
+<h1>@Session["Name"]</h1>*@
+
+@{ string color = ""; }
+
+<style>
+
+    th {
+        align-items: center;
+        padding: 1%;
+        border: 0.5px solid gray;
+    }
+
+    td {
+        margin: 1%;
+        border: 0.5px groove lightgray;
+        padding: 1%;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    thead {
+        position: sticky;
+        top: 0px;
+        border: 0.5px solid gray;
+    }
+
+    .block div {
+        border-bottom: 1px solid gray;
+        margin: 1%;
+    }
+</style>
+
+<div>
+    <div class="block">
+        <div> <h3> Имя протокола - @Model.ProtocolName </h3></div>
+        <div> <h3>Заказ - @Model.Order</h3></div>
+    </div>
+</div>
+
+<div style="display: block; margin:5%;">
+    <div style="margin-bottom:2%">
+        <div>   @Html.ActionLink("Вернутся к списку протоколов", "Index", "Lot", new { LOTID = Model.LOTID }, htmlAttributes: new { @class = "btn btn-success", @style = "background-color: lightgray; color:black" })  </div>
+        <div>   @Html.ActionLink("Открыть Историю действий по протоколу", "Index", "Log", routeValues: new { ProtocolID = Model.ID, top = true }, htmlAttributes: new { @class = "btn btn-success", @style = "background-color: lightgray; color:black" }) </div>
+    </div>
+
+    <div>
+        <div>   @Html.ActionLink("Провести проверку TOP", "EditProtocol","Lot", routeValues: new { ID = Model.ID, LOTID = Model.LOTID, TOPBOT = "TOP" }, htmlAttributes: new { @class = "btn btn-success" }) </div>
+        @if (Model.TOBOT)
+        {
+            <div> @Html.ActionLink("Провести проверку BOT", "EditProtocol", "Lot", routeValues: new { ID = Model.ID, LOTID = Model.LOTID, TOPBOT = "BOT" }, htmlAttributes: new { @class = "btn btn-success" }) </div>
+        }
+    </div>
+</div>
+
+
+
+<div class="TableManuf height">
+    <table class="table">
+        <thead>
+
+            <tr>
+                <th colspan="6" style="background-color: gold;">
+                    <div style="display: flex; align-items:baseline">
+                        <div>
+                            <h3>@Model.OTKProtocol.Name</h3> <h3>@Model.OTKProtocol.InfoCount</h3>
+                        </div>
+                        <div class="BlockResult">
+                            <div>
+                                <label> Проверок ОК - @Model.OTKProtocol.ListCounts.FirstOrDefault().CountOK </label>
+                            </div>
+                            <div>
+                                <label> Проверок NOK - @Model.OTKProtocol.ListCounts.FirstOrDefault().CountNOK </label>
+                            </div>
+                            <div>
+                                <label> Проверок N/A - @Model.OTKProtocol.ListCounts.FirstOrDefault().CountNA</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </th>
+            </tr>
+            <tr style="background-color:white">
+
+                <th>Сторона платы</th>
+                <th>Вид проверки</th>
+                <th>Дата проведения</th>
+                <th>Данные о проверке</th>
+                <th>Ответственные службы</th>
+                <th>Подпись лица проводившего проверку</th>
+                <th>Проверка согласно документа</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.OTKProtocol.InfosDetails)
+        {
+            if (item.Result == "OK")
+            {
+                color = "lightgreen";
+            }
+            else if (item.Result == "NOK")
+            {
+                color = "lightcoral";
+            }
+            else if (item.Result == "N/A")
+            {
+                color = "lightgray";
+            }
+            else
+            {
+                color = "";
+            }
+
+<tr style='background-color:@color'>
+    <td>
+        @item.BOTTOB
+    </td>
+    <td>
+        @item.TypeVerif
+    </td>
+    <td>
+        @item.Date
+    </td>
+    <td>
+        @item.Result
+    </td>
+    <td>
+        @item.Service
+    </td>
+    <td>
+        @item.UserName
+    </td>
+    <td>
+        @item.Document
+    </td>
+</tr>            
+        }
+
+    </table>
+</div>
+
+
+@foreach (var It in Model.Infos)
+{
+<div class="TableManuf">
+    <table class="table-hover">
+        <thead>
+            
+            <tr>
+                <th colspan="7" style="background-color: gold;">
+                    <div style="display:flex;align-items:baseline">
+                        <div>
+                            <h3>@It.Name</h3> <h3>@It.InfoCount</h3>
+                        </div>
+                        <div style="display:flex">
+                            @foreach (var item in It.ListCounts)
+                            {
+                                <div class="BlockResult">
+                                    <div>
+                                        <h4>@item.TOBBOT</h4>
+                                    </div>
+                                    <div>
+                                        <label>  Проверок ОК - @item.CountOK </label>
+                                    </div>
+                                    <div>
+                                        <label>  Проверок NOK - @item.CountNOK </label>
+                                    </div>
+                                    <div>
+                                        <label>  Проверок N/A - @item.CountNA</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                     </div>
+
+
+                </th>
+
+            </tr>
+
+            <tr style="background-color:white">
+                <th>Сторона PCB</th>
+                <th>Вид проверки</th>
+                <th>Дата проведения</th>
+                <th>Данные о проверке</th>
+                <th>Ответственные службы</th>
+                <th>Подпись лица проводившего проверку</th>
+                <th>Проверка согласно документа</th>
+            </tr>
+        </thead>
+
+
+
+        @foreach (var item in It.InfosDetails.OrderBy(c => c.BOTTOB).ThenBy(c => c.Service))
+        {
+
+            if (item.Result == "OK")
+            {
+                color = "lightgreen";
+            }
+            else if (item.Result == "NOK")
+            {
+                color = "lightcoral";
+            }
+            else if (item.Result == "N/A")
+            {
+                color = "lightgray";
+            }
+            else
+            {
+                color = "";
+            }
+
+
+<tr style='background-color:@color'>
+    <td>
+        @item.BOTTOB
+    </td>
+    <td>
+        @item.TypeVerif
+    </td>
+    <td>
+        @item.Date
+    </td>
+    <td>
+        @item.Result
+    </td>
+    <td>
+        @item.Service
+    </td>
+    <td>
+        @item.UserName
+    </td>
+    <td>
+        @item.Document
+    </td>
+</tr>}
+
+
+
+    </table>
+</div>
+}
+
+<style>
+
+    .BlockResult {
+        display: block;
+        border: 0.7px solid gray;
+        padding: 0.5%;
+        background-color: white;
+        width: 150px;        
+        font-size: 11px;
+        margin-left:3%;
+        text-align: center;
+    }
+
+    .TableManuf {
+        overflow-y: auto;
+        height: 850px;
+        border-bottom: 0.5px solid black;
+        border-top: 0.5px solid black;
+        margin: 1.5%;
+    }
+
+        .TableManuf.height {
+            height: auto;
+        }
+</style>

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ElectronicProtocolStartLine.Class.Monitoring.Fuji>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Monitoring Protocol</h2>
+<meta http-equiv="refresh" content="30">
+
+<div class="Fuj">
+    @foreach (var item in Model)
+    {
+        <div>
+            <h3>Линия  - @item.Line</h3>
+            <h3>Программа - @item.ProgrammName</h3>
+        </div>
+
+    }
+</div>
+
+@Html.ActionLink("Вернуться назад","Index","Home","", new { @class = "btn btn-info" })
+
+
+
+<style>
+
+    .Fuj {
+        display:block;
+        align-items:center;
+        margin:1%;
+        border:0.5px dashed gray;
+       
+    }
+        .Fuj div {
+            display: flex;
+            border-bottom: 1px groove gray;
+        }
+
+</style>

@@ -1,0 +1,15 @@
+﻿@model ElectronicProtocolStartLine.Class.SetLine.Lines
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2> Выберите линию, чтобы создать протокол </h2>
+
+@using (Html.BeginForm("SetLine","SetLine", FormMethod.Post))
+{
+    @Html.HiddenFor(c=>c.LOTID)
+    @Html.DropDownListFor(model => model.Line, Model.Linelist, htmlAttributes: new { @class = "form-control", style = "max-width:400px; width:400;" })
+    <input type="submit" value="Создать протокол" class="btn btn-success"/>
+}
+

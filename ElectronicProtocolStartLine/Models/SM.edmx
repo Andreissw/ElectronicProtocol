@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище SMDCOMPONETSModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AOIresult">
+          <Key>
+            <PropertyRef Name="IDresult" />
+          </Key>
+          <Property Name="IDresult" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InspectionID" Type="int" />
+          <Property Name="Machine" Type="varchar" MaxLength="50" />
+          <Property Name="PanelID" Type="smallint" />
+          <Property Name="PCBnumber" Type="varchar" MaxLength="50" />
+          <Property Name="inspectionDate" Type="smalldatetime" />
+          <Property Name="VisualDate" Type="smalldatetime" />
+          <Property Name="BoardName" Type="varchar" MaxLength="50" />
+          <Property Name="ProgramName" Type="varchar" MaxLength="50" />
+          <Property Name="User_INSPect" Type="varchar" MaxLength="50" />
+          <Property Name="InspectResult" Type="varchar" MaxLength="50" />
+          <Property Name="UserInspectionResult" Type="varchar" MaxLength="50" />
+          <Property Name="CIRNAME" Type="varchar" MaxLength="50" />
+          <Property Name="InsertionTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="LazerBase">
+          <Key>
+            <PropertyRef Name="Content" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="LogDate" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BoardID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Content" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Marked" Type="bit" Nullable="false" />
+          <Property Name="Result" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="IDLaser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InsertionDateTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="PCID" Type="smallint" />
+        </EntityType>
+        <EntityType Name="NewFujiScrapSQliteLine1">
+          <Key>
+            <PropertyRef Name="IDSQlite" />
+            <PropertyRef Name="DateTime" />
+          </Key>
+          <Property Name="InsertionTime" Type="datetime2" Precision="7" />
+          <Property Name="Line" Type="varchar" MaxLength="5" />
+          <Property Name="IDSQlite" Type="int" Nullable="false" />
+          <Property Name="DateTime" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="Module" Type="tinyint" />
+          <Property Name="PCBCount" Type="int" />
+          <Property Name="Recipe" Type="varchar" MaxLength="50" />
+          <Property Name="Name1" Type="smallint" />
+          <Property Name="Name2" Type="smallint" />
+          <Property Name="Slot" Type="smallint" />
+          <Property Name="Name3" Type="smallint" />
+          <Property Name="PickUp" Type="float" />
+          <Property Name="TotalError" Type="float" />
+          <Property Name="Error" Type="float" />
+          <Property Name="Reject" Type="float" />
+          <Property Name="Dislodged" Type="float" />
+          <Property Name="NoPickUp" Type="float" />
+          <Property Name="Usage" Type="float" />
+          <Property Name="Name4" Type="tinyint" />
+          <Property Name="Part" Type="varchar" MaxLength="100" />
+          <Property Name="Name5" Type="tinyint" />
+          <Property Name="Feeder" Type="varchar" MaxLength="50" />
+          <Property Name="Module1" Type="tinyint" />
+        </EntityType>
+        <EntityContainer Name="Хранилище SMDCOMPONETSModelContainer">
+          <EntitySet Name="AOIresult" EntityType="Self.AOIresult" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LazerBase" EntityType="Self.LazerBase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NewFujiScrapSQliteLine1" EntityType="Self.NewFujiScrapSQliteLine1" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SMDCOMPONETSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AOIresult">
+          <Key>
+            <PropertyRef Name="IDresult" />
+          </Key>
+          <Property Name="IDresult" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InspectionID" Type="Int32" />
+          <Property Name="Machine" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PanelID" Type="Int16" />
+          <Property Name="PCBnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="inspectionDate" Type="DateTime" Precision="0" />
+          <Property Name="VisualDate" Type="DateTime" Precision="0" />
+          <Property Name="BoardName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProgramName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="User_INSPect" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InspectResult" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserInspectionResult" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CIRNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InsertionTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="LazerBase">
+          <Key>
+            <PropertyRef Name="Content" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="LogDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="BoardID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Marked" Type="Boolean" Nullable="false" />
+          <Property Name="Result" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IDLaser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InsertionDateTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="PCID" Type="Int16" />
+        </EntityType>
+        <EntityType Name="NewFujiScrapSQliteLine1">
+          <Key>
+            <PropertyRef Name="IDSQlite" />
+            <PropertyRef Name="DateTime" />
+          </Key>
+          <Property Name="InsertionTime" Type="DateTime" Precision="7" />
+          <Property Name="Line" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="IDSQlite" Type="Int32" Nullable="false" />
+          <Property Name="DateTime" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Module" Type="Byte" />
+          <Property Name="PCBCount" Type="Int32" />
+          <Property Name="Recipe" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Name1" Type="Int16" />
+          <Property Name="Name2" Type="Int16" />
+          <Property Name="Slot" Type="Int16" />
+          <Property Name="Name3" Type="Int16" />
+          <Property Name="PickUp" Type="Double" />
+          <Property Name="TotalError" Type="Double" />
+          <Property Name="Error" Type="Double" />
+          <Property Name="Reject" Type="Double" />
+          <Property Name="Dislodged" Type="Double" />
+          <Property Name="NoPickUp" Type="Double" />
+          <Property Name="Usage" Type="Double" />
+          <Property Name="Name4" Type="Byte" />
+          <Property Name="Part" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Name5" Type="Byte" />
+          <Property Name="Feeder" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Module1" Type="Byte" />
+        </EntityType>
+        <EntityContainer Name="SMDCOMPONETSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AOIresult" EntityType="Self.AOIresult" />
+          <EntitySet Name="LazerBase" EntityType="Self.LazerBase" />
+          <EntitySet Name="NewFujiScrapSQliteLine1" EntityType="Self.NewFujiScrapSQliteLine1" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище SMDCOMPONETSModelContainer" CdmEntityContainer="SMDCOMPONETSEntities">
+          <EntitySetMapping Name="AOIresult">
+            <EntityTypeMapping TypeName="SMDCOMPONETSModel.AOIresult">
+              <MappingFragment StoreEntitySet="AOIresult">
+                <ScalarProperty Name="IDresult" ColumnName="IDresult" />
+                <ScalarProperty Name="InspectionID" ColumnName="InspectionID" />
+                <ScalarProperty Name="Machine" ColumnName="Machine" />
+                <ScalarProperty Name="PanelID" ColumnName="PanelID" />
+                <ScalarProperty Name="PCBnumber" ColumnName="PCBnumber" />
+                <ScalarProperty Name="inspectionDate" ColumnName="inspectionDate" />
+                <ScalarProperty Name="VisualDate" ColumnName="VisualDate" />
+                <ScalarProperty Name="BoardName" ColumnName="BoardName" />
+                <ScalarProperty Name="ProgramName" ColumnName="ProgramName" />
+                <ScalarProperty Name="User_INSPect" ColumnName="User_INSPect" />
+                <ScalarProperty Name="InspectResult" ColumnName="InspectResult" />
+                <ScalarProperty Name="UserInspectionResult" ColumnName="UserInspectionResult" />
+                <ScalarProperty Name="CIRNAME" ColumnName="CIRNAME" />
+                <ScalarProperty Name="InsertionTime" ColumnName="InsertionTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LazerBase">
+            <EntityTypeMapping TypeName="SMDCOMPONETSModel.LazerBase">
+              <MappingFragment StoreEntitySet="LazerBase">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="LogDate" ColumnName="LogDate" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="BoardID" ColumnName="BoardID" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Marked" ColumnName="Marked" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="IDLaser" ColumnName="IDLaser" />
+                <ScalarProperty Name="InsertionDateTime" ColumnName="InsertionDateTime" />
+                <ScalarProperty Name="PCID" ColumnName="PCID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewFujiScrapSQliteLine1">
+            <EntityTypeMapping TypeName="SMDCOMPONETSModel.NewFujiScrapSQliteLine1">
+              <MappingFragment StoreEntitySet="NewFujiScrapSQliteLine1">
+                <ScalarProperty Name="InsertionTime" ColumnName="InsertionTime" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="IDSQlite" ColumnName="IDSQlite" />
+                <ScalarProperty Name="DateTime" ColumnName="DateTime" />
+                <ScalarProperty Name="Module" ColumnName="Module" />
+                <ScalarProperty Name="PCBCount" ColumnName="PCBCount" />
+                <ScalarProperty Name="Recipe" ColumnName="Recipe" />
+                <ScalarProperty Name="Name1" ColumnName="Name1" />
+                <ScalarProperty Name="Name2" ColumnName="Name2" />
+                <ScalarProperty Name="Slot" ColumnName="Slot" />
+                <ScalarProperty Name="Name3" ColumnName="Name3" />
+                <ScalarProperty Name="PickUp" ColumnName="PickUp" />
+                <ScalarProperty Name="TotalError" ColumnName="TotalError" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="Reject" ColumnName="Reject" />
+                <ScalarProperty Name="Dislodged" ColumnName="Dislodged" />
+                <ScalarProperty Name="NoPickUp" ColumnName="NoPickUp" />
+                <ScalarProperty Name="Usage" ColumnName="Usage" />
+                <ScalarProperty Name="Name4" ColumnName="Name4" />
+                <ScalarProperty Name="Part" ColumnName="Part" />
+                <ScalarProperty Name="Name5" ColumnName="Name5" />
+                <ScalarProperty Name="Feeder" ColumnName="Feeder" />
+                <ScalarProperty Name="Module1" ColumnName="Module1" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

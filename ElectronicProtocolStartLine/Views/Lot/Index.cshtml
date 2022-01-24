@@ -1,0 +1,170 @@
+﻿@model IEnumerable<ElectronicProtocolStartLine.Class.Protocols.ProtocolTables>
+@*<h1>Служба - @Session["Service"] </h1>
+    <h1>@Session["Name"]</h1>*@
+
+@{
+    ViewBag.Title = "Index";
+}
+<div>@Html.ActionLink("Вернуться назад", "WorkForm", "Home")</div>
+
+@if (Session["UsID"].ToString() != "0")
+{
+    <div class="btn btn-success" style="margin-top: 3%; margin-bottom: 2%; background-color: wheat ">@Html.ActionLink("Создать Линию для протокола", "Index", "SetLine", new { LOTID = Model.FirstOrDefault().LOTID }, "")</div>
+}
+
+<h2>Заказ @Model.FirstOrDefault().NameOrder </h2>
+<div id="mes"></div>
+<div class="block">
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th colspan="6">
+                    Активные протоколы
+                </th>
+            </tr>
+        </thead>
+
+        <tr>
+            <th>
+                Имя протокола
+            </th>
+            <th>
+                Сторона платы
+            </th>
+            <th>
+                Линия
+            </th>
+            <th>
+                Программы
+            </th>
+            <th>
+                Дата создания
+            </th>
+            <th>
+                Проверка протокола
+            </th>
+            <th style="text-align: center; border-left: 0.3px solid darkgray; ">
+                Отчёт протокола
+            </th>
+        </tr>
+
+        @foreach (var item in Model.Where(b => b.IsActiveTOP == true || b.IsActiveBOT == true))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelitem => item.NameProtocol)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TOPBOT)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelitem => item.Line)
+                </td>
+                <td>
+                    @Html.ActionLink("Показать", "GetPGName", "LOT", new { ProtocolID = item.ID, name = item.NameOrder, Protocolname = item.NameProtocol }, new { @class = "btn btn-info", target = "_blank" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreate)
+                </td>
+                <td>
+                    <div>
+                        @if (item.TOP != null)
+                        {
+                            if (item.TOP.IsActive != false & item.TOP.CountAll != 0)
+                            {
+
+                                <div style="display:flex">
+                                    <div>@Html.ActionLink($"Проверка Вверх платы {item.TOP.CountTrue} из {item.TOP.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = "TOP" }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
+                                    @*<div><label>По всем службам @item.TOP.CountProtocolTrue из @item.TOP.CountProtocolAll</label></div>*@
+                                </div>
+                            }
+                        }
+
+                        @if (item.BOT != null)
+                        {
+                            if (item.BOT.IsActive != false & item.BOT.CountAll != 0)
+                            {
+                                <div style="display:flex">
+                                    <div>@Html.ActionLink($"Проверка Низ платы {item.BOT.CountTrue} из {item.BOT.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = "BOT" }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
+                                    @*<div><label>По всем службам @item.TOP.CountProtocolTrue из @item.TOP.CountProtocolAll</label></div>*@
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </td>
+                <td style="text-align:center; border-left:0.3px solid darkgray;">
+
+                    @if (Session["Service"].ToString() == "Технический директор" || Session["Service"].ToString() == "Бог")
+                    {
+                        <div style="margin-bottom:2%;">
+                            <label class="btn btn-success" onclick="StartProtocol(@item.ID, @item.Line,'TOP',@Model.FirstOrDefault().LOTID, '@item.NameProtocol')"> Запустить протокол без проверки Строна Вверх </label>
+                        </div>
+                        <div style="margin-bottom:2%;">
+                            <label class="btn btn-success" onclick="StartProtocol(@item.ID,@item.Line,'BOT',@Model.FirstOrDefault().LOTID, '@item.NameProtocol')"> Запустить протокол без проверки Строна Низ </label>
+                        </div>
+                    }
+
+                    <div>
+                        @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, NameProtocol = item.NameProtocol, NameOrder = item.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" })
+                    </div>
+                </td>
+
+            </tr>
+        }
+
+    </table>
+</div>
+
+<script>
+    function StartProtocol(idPrt, Line ,TOPBOT, LOTID, NameProtocol) {
+        if (!confirm("Уверены, что хотите запустить протокол без проверки?")) return;
+
+        $.ajax({
+
+            url: '@Url.Action("StartProtocol", "Lot")',
+            dataType: "json",
+            data: { idProtocol: idPrt, Line: Line, TOPBOT: TOPBOT, LOTID: LOTID},
+            success: function (message) {
+                if (message != "true") {
+                    MessageGet(message, "style='background-color: lightcoral'; font-size:36px;");
+                }
+                else {
+                    MessageGet('Успешно запущен протокол' + NameProtocol + 'Сторона' + TOPBOT, "style='background-color: lightgreen'");
+                }
+            }
+        })
+
+        function MessageGet(message, style) {
+            document.getElementById('mes').innerHTML = "<label " + style + ">" + message + "</label>"
+        }
+
+    }
+</script>
+
+<style>
+    table {
+        background-color: lightgray;
+    }
+
+    .table tr:nth-child(odd) {
+        background-color: #EAF2D3;
+    }
+
+    td {
+        font-size: 20px;
+    }
+
+    thead th {
+        font-size: 20px;
+        text-align: center;
+        background-color: gold;
+    }
+
+    .block {
+        max-height: 800px;
+        height: auto;
+        overflow-y: auto;
+    }
+</style>

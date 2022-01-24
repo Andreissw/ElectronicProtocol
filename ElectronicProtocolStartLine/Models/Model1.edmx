@@ -1,0 +1,1436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище FASModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Contract_LOT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOTCode" Type="smallint" />
+          <Property Name="ModelID" Type="int" Nullable="false" />
+          <Property Name="Specification" Type="nvarchar" MaxLength="250" />
+          <Property Name="FullLOTCode" Type="nvarchar" MaxLength="250" />
+          <Property Name="LiterIndex" Type="int" Nullable="false" />
+          <Property Name="BoxCapacity" Type="int" Nullable="false" />
+          <Property Name="PalletCapacity" Type="int" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="CheckFormatSN_SMT" Type="bit" Nullable="false" />
+          <Property Name="CheckFormatSN_FAS" Type="bit" Nullable="false" />
+          <Property Name="SMTNumberFormat" Type="nvarchar" MaxLength="150" />
+          <Property Name="SMTRangeChecked" Type="bit" Nullable="false" />
+          <Property Name="SMTStartRange" Type="int" />
+          <Property Name="SMTEndRange" Type="int" />
+          <Property Name="FASNumberFormat" Type="nvarchar" MaxLength="150" />
+          <Property Name="FASRangeChecked" Type="bit" Nullable="false" />
+          <Property Name="FASStartRange" Type="int" />
+          <Property Name="FASEndRange" Type="int" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="SingleSN" Type="bit" />
+          <Property Name="SN_MAC_Param" Type="tinyint" />
+          <Property Name="ParseLog" Type="bit" />
+          <Property Name="StepSequence" Type="nvarchar" MaxLength="50" />
+          <Property Name="HexFasSN" Type="bit" />
+          <Property Name="СustomersID" Type="int" Nullable="false" />
+          <Property Name="LOTSize" Type="int" />
+          <Property Name="LOT_Shipped" Type="int" />
+          <Property Name="FASNumberFormat2" Type="nvarchar" MaxLength="150" />
+          <Property Name="DateManufacter" Type="datetime" />
+        </EntityType>
+        <EntityType Name="CT_Сustomers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="СustomerName" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="ShortName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="EP_Doc">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDProtocol" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Path" Type="nvarchar" MaxLength="250" />
+          <Property Name="Visible" Type="bit" />
+          <Property Name="ContentType" Type="nvarchar" MaxLength="200" />
+          <Property Name="NameFile" Type="nvarchar" MaxLength="150" />
+          <Property Name="extension" Type="nvarchar" MaxLength="10" />
+          <Property Name="LOTID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EP_Email">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="200" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="NameAdress" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EP_Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDProtocol" Type="int" />
+          <Property Name="IDVeryf" Type="int" />
+          <Property Name="UserID" Type="smallint" />
+          <Property Name="ServiceID" Type="int" />
+          <Property Name="Result" Type="nvarchar" MaxLength="10" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="IDStep" Type="int" Nullable="false" />
+          <Property Name="TOPBOT" Type="nvarchar" MaxLength="3" />
+          <Property Name="DocumentID" Type="int" />
+          <Property Name="LOTID" Type="int" />
+        </EntityType>
+        <EntityType Name="EP_Machine">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="EP_Monitoring">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Line" Type="nvarchar" MaxLength="10" />
+          <Property Name="ProgrammName" Type="nvarchar" MaxLength="250" />
+          <Property Name="MaxModules" Type="int" />
+        </EntityType>
+        <EntityType Name="EP_PGName">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDProtocol" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" />
+          <Property Name="IDMachine" Type="int" />
+          <Property Name="Visible" Type="bit" />
+          <Property Name="Type" Type="nvarchar" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="EP_Protocols">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DateCreate" Type="datetime" Nullable="false" />
+          <Property Name="LOTID" Type="int" Nullable="false" />
+          <Property Name="TOPBOT" Type="bit" Nullable="false" />
+          <Property Name="IsActiveTOP" Type="bit" Nullable="false" />
+          <Property Name="StartStatusTOP" Type="bit" Nullable="false" />
+          <Property Name="StartStatusBOT" Type="bit" />
+          <Property Name="NameProtocol" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsActiveBOT" Type="bit" Nullable="false" />
+          <Property Name="Line" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="EP_ProtocolsInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProtocolID" Type="int" Nullable="false" />
+          <Property Name="TypeVerifID" Type="int" Nullable="false" />
+          <Property Name="DateCreate" Type="datetime" />
+          <Property Name="Signature" Type="bit" />
+          <Property Name="UserID" Type="smallint" />
+          <Property Name="Result" Type="nvarchar" MaxLength="10" />
+          <Property Name="TOPBOT" Type="nvarchar" MaxLength="10" />
+          <Property Name="Visible" Type="bit" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Itter" Type="smallint" />
+        </EntityType>
+        <EntityType Name="EP_Result">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Result" Type="nvarchar" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="EP_Service">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EP_StepLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StepName" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="EP_TypeDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="EP_TypeVerification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="150" />
+          <Property Name="Manufacter" Type="nvarchar" MaxLength="26" Nullable="false" />
+          <Property Name="Num" Type="smallint" Nullable="false" />
+          <Property Name="TOPBOT" Type="nvarchar" MaxLength="15" />
+          <Property Name="IDService" Type="int" />
+          <Property Name="TypeDocID" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Sort" Type="smallint" />
+        </EntityType>
+        <EntityType Name="FAS_GS_LOTs">
+          <Key>
+            <PropertyRef Name="LOTID" />
+          </Key>
+          <Property Name="LOTID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOTCode" Type="smallint" Nullable="false" />
+          <Property Name="FULL_LOT_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Specification" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ModelID" Type="smallint" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsHDCPUpload" Type="bit" />
+          <Property Name="IsCertUpload" Type="bit" />
+          <Property Name="IsMACUpload" Type="bit" />
+          <Property Name="WorkingScenarioID" Type="tinyint" />
+          <Property Name="LabelScenarioID" Type="tinyint" />
+          <Property Name="LiterIndex" Type="int" />
+          <Property Name="BoxCapacity" Type="int" />
+          <Property Name="PalletCapacity" Type="int" />
+          <Property Name="Manufacturer" Type="nvarchar" MaxLength="5" />
+          <Property Name="Operator" Type="nvarchar" MaxLength="10" />
+          <Property Name="MarketID" Type="nvarchar" MaxLength="15" />
+          <Property Name="PTID" Type="nvarchar" MaxLength="2" />
+          <Property Name="ModelCheck" Type="bit" />
+          <Property Name="SWRead" Type="bit" />
+          <Property Name="SWGS1Read" Type="bit" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateByID" Type="smallint" Nullable="false" />
+          <Property Name="CloseDate" Type="datetime" />
+          <Property Name="CloseByID" Type="smallint" />
+          <Property Name="Fixed_Range" Type="bit" />
+          <Property Name="Fixed_Range_Date" Type="date" />
+          <Property Name="GetWeight" Type="bit" />
+          <Property Name="RangeStart" Type="int" />
+          <Property Name="RangeEnd" Type="int" />
+          <Property Name="FixedRG" Type="bit" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="SWVersion" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsBunch" Type="bit" />
+          <Property Name="IsWeighingPackage" Type="bit" />
+          <Property Name="FakePackage" Type="bit" />
+          <Property Name="FakeBoxNum" Type="int" />
+          <Property Name="FakePalletNum" Type="int" />
+          <Property Name="CountinLot" Type="int" />
+          <Property Name="DateManufacter" Type="datetime" />
+        </EntityType>
+        <EntityType Name="FAS_Models">
+          <Key>
+            <PropertyRef Name="ModelID" />
+          </Key>
+          <Property Name="ModelID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ModelName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ModelTypeID" Type="tinyint" Nullable="false" />
+          <Property Name="DelaySetting" Type="nvarchar" MaxLength="150" />
+          <Property Name="TopMask" Type="nvarchar" MaxLength="100" />
+          <Property Name="BotMask" Type="nvarchar" MaxLength="15" />
+          <Property Name="lenHDCP" Type="smallint" />
+          <Property Name="ChipCode" Type="smallint" />
+          <Property Name="CustomerID" Type="int" />
+        </EntityType>
+        <EntityType Name="FAS_Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RFID" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IsActiv" Type="bit" Nullable="false" />
+          <Property Name="UsersGroupID" Type="tinyint" Nullable="false" />
+          <Property Name="IDService" Type="int" />
+        </EntityType>
+        <Association Name="EP_Doc_fk">
+          <End Role="EP_TypeDocument" Type="Self.EP_TypeDocument" Multiplicity="0..1" />
+          <End Role="EP_TypeVerification" Type="Self.EP_TypeVerification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_TypeDocument">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_TypeVerification">
+              <PropertyRef Name="TypeDocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogProtoc_fk">
+          <End Role="EP_Protocols" Type="Self.EP_Protocols" Multiplicity="0..1" />
+          <End Role="EP_Log" Type="Self.EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="IDProtocol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogServ_fk">
+          <End Role="EP_Service" Type="Self.EP_Service" Multiplicity="0..1" />
+          <End Role="EP_Log" Type="Self.EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Service">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogUserID_fk">
+          <End Role="FAS_Users" Type="Self.FAS_Users" Multiplicity="0..1" />
+          <End Role="EP_Log" Type="Self.EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogVer_fk">
+          <End Role="EP_TypeVerification" Type="Self.EP_TypeVerification" Multiplicity="0..1" />
+          <End Role="EP_Log" Type="Self.EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_TypeVerification">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="IDVeryf" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_MAch_fk">
+          <End Role="EP_Machine" Type="Self.EP_Machine" Multiplicity="0..1" />
+          <End Role="EP_PGName" Type="Self.EP_PGName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Machine">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_PGName">
+              <PropertyRef Name="IDMachine" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_Pg_fk">
+          <End Role="EP_Protocols" Type="Self.EP_Protocols" Multiplicity="0..1" />
+          <End Role="EP_PGName" Type="Self.EP_PGName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_PGName">
+              <PropertyRef Name="IDProtocol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_protoc_fk">
+          <End Role="EP_Protocols" Type="Self.EP_Protocols" Multiplicity="0..1" />
+          <End Role="EP_Doc" Type="Self.EP_Doc" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Doc">
+              <PropertyRef Name="IDProtocol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_ProtocolInfo_fk">
+          <End Role="EP_Protocols" Type="Self.EP_Protocols" Multiplicity="1" />
+          <End Role="EP_ProtocolsInfo" Type="Self.EP_ProtocolsInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_ProtocolsInfo">
+              <PropertyRef Name="ProtocolID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_Serv_fk">
+          <End Role="EP_Service" Type="Self.EP_Service" Multiplicity="0..1" />
+          <End Role="EP_TypeVerification" Type="Self.EP_TypeVerification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Service">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_TypeVerification">
+              <PropertyRef Name="IDService" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_TypeVer_fk">
+          <End Role="EP_TypeVerification" Type="Self.EP_TypeVerification" Multiplicity="1" />
+          <End Role="EP_ProtocolsInfo" Type="Self.EP_ProtocolsInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_TypeVerification">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_ProtocolsInfo">
+              <PropertyRef Name="TypeVerifID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_UserID_fk">
+          <End Role="FAS_Users" Type="Self.FAS_Users" Multiplicity="0..1" />
+          <End Role="EP_ProtocolsInfo" Type="Self.EP_ProtocolsInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="EP_ProtocolsInfo">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Contract___Сusto__7EE1CA6C">
+          <End Role="CT_Сustomers" Type="Self.CT_Сustomers" Multiplicity="1" />
+          <End Role="Contract_LOT" Type="Self.Contract_LOT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CT_Сustomers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Contract_LOT">
+              <PropertyRef Name="СustomersID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FAS_GS_LOTs_FAS_Models">
+          <End Role="FAS_Models" Type="Self.FAS_Models" Multiplicity="1" />
+          <End Role="FAS_GS_LOTs" Type="Self.FAS_GS_LOTs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Models">
+              <PropertyRef Name="ModelID" />
+            </Principal>
+            <Dependent Role="FAS_GS_LOTs">
+              <PropertyRef Name="ModelID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FAS_GS_LOTs_FAS_Users">
+          <End Role="FAS_Users" Type="Self.FAS_Users" Multiplicity="1" />
+          <End Role="FAS_GS_LOTs" Type="Self.FAS_GS_LOTs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="FAS_GS_LOTs">
+              <PropertyRef Name="CreateByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FAS_GS_LOTs_FAS_Users1">
+          <End Role="FAS_Users" Type="Self.FAS_Users" Multiplicity="0..1" />
+          <End Role="FAS_GS_LOTs" Type="Self.FAS_GS_LOTs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="FAS_GS_LOTs">
+              <PropertyRef Name="CloseByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_idStep">
+          <End Role="EP_StepLog" Type="Self.EP_StepLog" Multiplicity="1" />
+          <End Role="EP_Log" Type="Self.EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_StepLog">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="IDStep" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище FASModelContainer">
+          <EntitySet Name="Contract_LOT" EntityType="Self.Contract_LOT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CT_Сustomers" EntityType="Self.CT_Сustomers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Doc" EntityType="Self.EP_Doc" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Email" EntityType="Self.EP_Email" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Log" EntityType="Self.EP_Log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Machine" EntityType="Self.EP_Machine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Monitoring" EntityType="Self.EP_Monitoring" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_PGName" EntityType="Self.EP_PGName" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Protocols" EntityType="Self.EP_Protocols" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_ProtocolsInfo" EntityType="Self.EP_ProtocolsInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Result" EntityType="Self.EP_Result" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_Service" EntityType="Self.EP_Service" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_StepLog" EntityType="Self.EP_StepLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_TypeDocument" EntityType="Self.EP_TypeDocument" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EP_TypeVerification" EntityType="Self.EP_TypeVerification" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FAS_GS_LOTs" EntityType="Self.FAS_GS_LOTs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FAS_Models" EntityType="Self.FAS_Models" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FAS_Users" EntityType="Self.FAS_Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="EP_Doc_fk" Association="Self.EP_Doc_fk">
+            <End Role="EP_TypeDocument" EntitySet="EP_TypeDocument" />
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogProtoc_fk" Association="Self.EP_LogProtoc_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogServ_fk" Association="Self.EP_LogServ_fk">
+            <End Role="EP_Service" EntitySet="EP_Service" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogUserID_fk" Association="Self.EP_LogUserID_fk">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogVer_fk" Association="Self.EP_LogVer_fk">
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_MAch_fk" Association="Self.EP_MAch_fk">
+            <End Role="EP_Machine" EntitySet="EP_Machine" />
+            <End Role="EP_PGName" EntitySet="EP_PGName" />
+          </AssociationSet>
+          <AssociationSet Name="EP_Pg_fk" Association="Self.EP_Pg_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_PGName" EntitySet="EP_PGName" />
+          </AssociationSet>
+          <AssociationSet Name="EP_protoc_fk" Association="Self.EP_protoc_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_Doc" EntitySet="EP_Doc" />
+          </AssociationSet>
+          <AssociationSet Name="EP_ProtocolInfo_fk" Association="Self.EP_ProtocolInfo_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_ProtocolsInfo" EntitySet="EP_ProtocolsInfo" />
+          </AssociationSet>
+          <AssociationSet Name="EP_Serv_fk" Association="Self.EP_Serv_fk">
+            <End Role="EP_Service" EntitySet="EP_Service" />
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+          </AssociationSet>
+          <AssociationSet Name="EP_TypeVer_fk" Association="Self.EP_TypeVer_fk">
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+            <End Role="EP_ProtocolsInfo" EntitySet="EP_ProtocolsInfo" />
+          </AssociationSet>
+          <AssociationSet Name="EP_UserID_fk" Association="Self.EP_UserID_fk">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="EP_ProtocolsInfo" EntitySet="EP_ProtocolsInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Contract___Сusto__7EE1CA6C" Association="Self.FK__Contract___Сusto__7EE1CA6C">
+            <End Role="CT_Сustomers" EntitySet="CT_Сustomers" />
+            <End Role="Contract_LOT" EntitySet="Contract_LOT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FAS_GS_LOTs_FAS_Models" Association="Self.FK_FAS_GS_LOTs_FAS_Models">
+            <End Role="FAS_Models" EntitySet="FAS_Models" />
+            <End Role="FAS_GS_LOTs" EntitySet="FAS_GS_LOTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FAS_GS_LOTs_FAS_Users" Association="Self.FK_FAS_GS_LOTs_FAS_Users">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="FAS_GS_LOTs" EntitySet="FAS_GS_LOTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FAS_GS_LOTs_FAS_Users1" Association="Self.FK_FAS_GS_LOTs_FAS_Users1">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="FAS_GS_LOTs" EntitySet="FAS_GS_LOTs" />
+          </AssociationSet>
+          <AssociationSet Name="fk_idStep" Association="Self.fk_idStep">
+            <End Role="EP_StepLog" EntitySet="EP_StepLog" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FASModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="EP_Result">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Result" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="EP_Service">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EP_TypeVerification" Relationship="FASModel.EP_Serv_fk" FromRole="EP_Service" ToRole="EP_TypeVerification" />
+          <NavigationProperty Name="EP_Log" Relationship="FASModel.EP_LogServ_fk" FromRole="EP_Service" ToRole="EP_Log" />
+        </EntityType>
+        <EntityType Name="EP_TypeDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EP_TypeVerification" Relationship="FASModel.EP_Doc_fk" FromRole="EP_TypeDocument" ToRole="EP_TypeVerification" />
+        </EntityType>
+        <EntityType Name="EP_TypeVerification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Manufacter" Type="String" MaxLength="26" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Num" Type="Int16" Nullable="false" />
+          <Property Name="TOPBOT" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="IDService" Type="Int32" />
+          <Property Name="TypeDocID" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Sort" Type="Int16" />
+          <NavigationProperty Name="EP_ProtocolsInfo" Relationship="FASModel.EP_TypeVer_fk" FromRole="EP_TypeVerification" ToRole="EP_ProtocolsInfo" />
+          <NavigationProperty Name="EP_Service" Relationship="FASModel.EP_Serv_fk" FromRole="EP_TypeVerification" ToRole="EP_Service" />
+          <NavigationProperty Name="EP_TypeDocument" Relationship="FASModel.EP_Doc_fk" FromRole="EP_TypeVerification" ToRole="EP_TypeDocument" />
+          <NavigationProperty Name="EP_Log" Relationship="FASModel.EP_LogVer_fk" FromRole="EP_TypeVerification" ToRole="EP_Log" />
+        </EntityType>
+        <EntityType Name="FAS_Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RFID" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActiv" Type="Boolean" Nullable="false" />
+          <Property Name="UsersGroupID" Type="Byte" Nullable="false" />
+          <Property Name="IDService" Type="Int32" />
+          <NavigationProperty Name="FAS_GS_LOTs" Relationship="FASModel.FK_FAS_GS_LOTs_FAS_Users" FromRole="FAS_Users" ToRole="FAS_GS_LOTs" />
+          <NavigationProperty Name="FAS_GS_LOTs1" Relationship="FASModel.FK_FAS_GS_LOTs_FAS_Users1" FromRole="FAS_Users" ToRole="FAS_GS_LOTs" />
+          <NavigationProperty Name="EP_ProtocolsInfo" Relationship="FASModel.EP_UserID_fk" FromRole="FAS_Users" ToRole="EP_ProtocolsInfo" />
+          <NavigationProperty Name="EP_Log" Relationship="FASModel.EP_LogUserID_fk" FromRole="FAS_Users" ToRole="EP_Log" />
+        </EntityType>
+        <EntityContainer Name="FASEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="EP_Result" EntityType="Self.EP_Result" />
+          <EntitySet Name="EP_Service" EntityType="Self.EP_Service" />
+          <EntitySet Name="EP_TypeDocument" EntityType="Self.EP_TypeDocument" />
+          <EntitySet Name="EP_TypeVerification" EntityType="Self.EP_TypeVerification" />
+          <EntitySet Name="FAS_Users" EntityType="Self.FAS_Users" />
+          <EntitySet Name="EP_ProtocolsInfo" EntityType="FASModel.EP_ProtocolsInfo" />
+          <EntitySet Name="Contract_LOT" EntityType="FASModel.Contract_LOT" />
+          <EntitySet Name="FAS_GS_LOTs" EntityType="FASModel.FAS_GS_LOTs" />
+          <AssociationSet Name="FK_FAS_GS_LOTs_FAS_Users" Association="FASModel.FK_FAS_GS_LOTs_FAS_Users">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="FAS_GS_LOTs" EntitySet="FAS_GS_LOTs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FAS_GS_LOTs_FAS_Users1" Association="FASModel.FK_FAS_GS_LOTs_FAS_Users1">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="FAS_GS_LOTs" EntitySet="FAS_GS_LOTs" />
+          </AssociationSet>
+          <EntitySet Name="CT_Сustomers" EntityType="FASModel.CT_Сustomers" />
+          <EntitySet Name="EP_Doc" EntityType="FASModel.EP_Doc" />
+          <EntitySet Name="EP_Machine" EntityType="FASModel.EP_Machine" />
+          <EntitySet Name="EP_PGName" EntityType="FASModel.EP_PGName" />
+          <EntitySet Name="EP_Monitoring" EntityType="FASModel.EP_Monitoring" />
+          <AssociationSet Name="EP_MAch_fk" Association="FASModel.EP_MAch_fk">
+            <End Role="EP_Machine" EntitySet="EP_Machine" />
+            <End Role="EP_PGName" EntitySet="EP_PGName" />
+          </AssociationSet>
+          <AssociationSet Name="EP_TypeVer_fk" Association="FASModel.EP_TypeVer_fk">
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+            <End Role="EP_ProtocolsInfo" EntitySet="EP_ProtocolsInfo" />
+          </AssociationSet>
+          <AssociationSet Name="EP_UserID_fk" Association="FASModel.EP_UserID_fk">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="EP_ProtocolsInfo" EntitySet="EP_ProtocolsInfo" />
+          </AssociationSet>
+          <AssociationSet Name="EP_Serv_fk" Association="FASModel.EP_Serv_fk">
+            <End Role="EP_Service" EntitySet="EP_Service" />
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+          </AssociationSet>
+          <AssociationSet Name="EP_Doc_fk" Association="FASModel.EP_Doc_fk">
+            <End Role="EP_TypeDocument" EntitySet="EP_TypeDocument" />
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+          </AssociationSet>
+          <EntitySet Name="EP_StepLog" EntityType="FASModel.EP_StepLog" />
+          <EntitySet Name="FAS_Models" EntityType="FASModel.FAS_Models" />
+          <AssociationSet Name="FK_FAS_GS_LOTs_FAS_Models" Association="FASModel.FK_FAS_GS_LOTs_FAS_Models">
+            <End Role="FAS_Models" EntitySet="FAS_Models" />
+            <End Role="FAS_GS_LOTs" EntitySet="FAS_GS_LOTs" />
+          </AssociationSet>
+          <EntitySet Name="EP_Log" EntityType="FASModel.EP_Log" />
+          <EntitySet Name="EP_Protocols" EntityType="FASModel.EP_Protocols" />
+          <AssociationSet Name="EP_protoc_fk" Association="FASModel.EP_protoc_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_Doc" EntitySet="EP_Doc" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogProtoc_fk" Association="FASModel.EP_LogProtoc_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogServ_fk" Association="FASModel.EP_LogServ_fk">
+            <End Role="EP_Service" EntitySet="EP_Service" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogUserID_fk" Association="FASModel.EP_LogUserID_fk">
+            <End Role="FAS_Users" EntitySet="FAS_Users" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_LogVer_fk" Association="FASModel.EP_LogVer_fk">
+            <End Role="EP_TypeVerification" EntitySet="EP_TypeVerification" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="fk_idStep" Association="FASModel.fk_idStep">
+            <End Role="EP_StepLog" EntitySet="EP_StepLog" />
+            <End Role="EP_Log" EntitySet="EP_Log" />
+          </AssociationSet>
+          <AssociationSet Name="EP_Pg_fk" Association="FASModel.EP_Pg_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_PGName" EntitySet="EP_PGName" />
+          </AssociationSet>
+          <AssociationSet Name="EP_ProtocolInfo_fk" Association="FASModel.EP_ProtocolInfo_fk">
+            <End Role="EP_Protocols" EntitySet="EP_Protocols" />
+            <End Role="EP_ProtocolsInfo" EntitySet="EP_ProtocolsInfo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Contract___Сusto__7EE1CA6C" Association="FASModel.FK__Contract___Сusto__7EE1CA6C">
+            <End Role="CT_Сustomers" EntitySet="CT_Сustomers" />
+            <End Role="Contract_LOT" EntitySet="Contract_LOT" />
+          </AssociationSet>
+          <EntitySet Name="EP_Email" EntityType="FASModel.EP_Email" />
+        </EntityContainer>
+        <EntityType Name="EP_ProtocolsInfo">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProtocolID" Type="Int32" Nullable="false" />
+          <Property Name="TypeVerifID" Type="Int32" Nullable="false" />
+          <Property Name="DateCreate" Type="DateTime" Precision="3" />
+          <Property Name="Signature" Type="Boolean" />
+          <Property Name="UserID" Type="Int16" />
+          <Property Name="Result" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="TOPBOT" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Visible" Type="Boolean" />
+          <NavigationProperty Name="EP_TypeVerification" Relationship="FASModel.EP_TypeVer_fk" FromRole="EP_ProtocolsInfo" ToRole="EP_TypeVerification" />
+          <NavigationProperty Name="FAS_Users" Relationship="FASModel.EP_UserID_fk" FromRole="EP_ProtocolsInfo" ToRole="FAS_Users" />
+          <NavigationProperty Name="EP_Protocols" Relationship="FASModel.EP_ProtocolInfo_fk" FromRole="EP_ProtocolsInfo" ToRole="EP_Protocols" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Itter" Type="Int16" />
+        </EntityType>
+        <EntityType Name="Contract_LOT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOTCode" Type="Int16" />
+          <Property Name="ModelID" Type="Int32" Nullable="false" />
+          <Property Name="Specification" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FullLOTCode" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="LiterIndex" Type="Int32" Nullable="false" />
+          <Property Name="BoxCapacity" Type="Int32" Nullable="false" />
+          <Property Name="PalletCapacity" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CheckFormatSN_SMT" Type="Boolean" Nullable="false" />
+          <Property Name="CheckFormatSN_FAS" Type="Boolean" Nullable="false" />
+          <Property Name="SMTNumberFormat" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SMTRangeChecked" Type="Boolean" Nullable="false" />
+          <Property Name="SMTStartRange" Type="Int32" />
+          <Property Name="SMTEndRange" Type="Int32" />
+          <Property Name="FASNumberFormat" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FASRangeChecked" Type="Boolean" Nullable="false" />
+          <Property Name="FASStartRange" Type="Int32" />
+          <Property Name="FASEndRange" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="SingleSN" Type="Boolean" />
+          <Property Name="SN_MAC_Param" Type="Byte" />
+          <Property Name="ParseLog" Type="Boolean" />
+          <Property Name="StepSequence" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HexFasSN" Type="Boolean" />
+          <Property Name="СustomersID" Type="Int32" Nullable="false" />
+          <Property Name="LOTSize" Type="Int32" />
+          <Property Name="LOT_Shipped" Type="Int32" />
+          <Property Name="FASNumberFormat2" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="DateManufacter" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="CT_Сustomers" Relationship="FASModel.FK__Contract___Сusto__7EE1CA6C" FromRole="Contract_LOT" ToRole="CT_Сustomers" />
+        </EntityType>
+        <EntityType Name="FAS_GS_LOTs">
+          <Key>
+            <PropertyRef Name="LOTID" />
+          </Key>
+          <Property Name="LOTID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOTCode" Type="Int16" Nullable="false" />
+          <Property Name="FULL_LOT_Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Specification" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModelID" Type="Int16" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsHDCPUpload" Type="Boolean" />
+          <Property Name="IsCertUpload" Type="Boolean" />
+          <Property Name="IsMACUpload" Type="Boolean" />
+          <Property Name="WorkingScenarioID" Type="Byte" />
+          <Property Name="LabelScenarioID" Type="Byte" />
+          <Property Name="LiterIndex" Type="Int32" />
+          <Property Name="BoxCapacity" Type="Int32" />
+          <Property Name="PalletCapacity" Type="Int32" />
+          <Property Name="Manufacturer" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Operator" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MarketID" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="PTID" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="ModelCheck" Type="Boolean" />
+          <Property Name="SWRead" Type="Boolean" />
+          <Property Name="SWGS1Read" Type="Boolean" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateByID" Type="Int16" Nullable="false" />
+          <Property Name="CloseDate" Type="DateTime" Precision="3" />
+          <Property Name="CloseByID" Type="Int16" />
+          <Property Name="Fixed_Range" Type="Boolean" />
+          <Property Name="Fixed_Range_Date" Type="DateTime" Precision="0" />
+          <Property Name="GetWeight" Type="Boolean" />
+          <Property Name="RangeStart" Type="Int32" />
+          <Property Name="RangeEnd" Type="Int32" />
+          <Property Name="FixedRG" Type="Boolean" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="SWVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsBunch" Type="Boolean" />
+          <Property Name="IsWeighingPackage" Type="Boolean" />
+          <NavigationProperty Name="FAS_Users" Relationship="FASModel.FK_FAS_GS_LOTs_FAS_Users" FromRole="FAS_GS_LOTs" ToRole="FAS_Users" />
+          <NavigationProperty Name="FAS_Users1" Relationship="FASModel.FK_FAS_GS_LOTs_FAS_Users1" FromRole="FAS_GS_LOTs" ToRole="FAS_Users" />
+          <Property Name="FakePackage" Type="Boolean" />
+          <Property Name="FakeBoxNum" Type="Int32" />
+          <Property Name="FakePalletNum" Type="Int32" />
+          <Property Name="CountinLot" Type="Int32" />
+          <NavigationProperty Name="FAS_Models" Relationship="FASModel.FK_FAS_GS_LOTs_FAS_Models" FromRole="FAS_GS_LOTs" ToRole="FAS_Models" />
+          <Property Name="DateManufacter" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_FAS_GS_LOTs_FAS_Users">
+          <End Type="FASModel.FAS_Users" Role="FAS_Users" Multiplicity="1" />
+          <End Type="FASModel.FAS_GS_LOTs" Role="FAS_GS_LOTs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="FAS_GS_LOTs">
+              <PropertyRef Name="CreateByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FAS_GS_LOTs_FAS_Users1">
+          <End Type="FASModel.FAS_Users" Role="FAS_Users" Multiplicity="0..1" />
+          <End Type="FASModel.FAS_GS_LOTs" Role="FAS_GS_LOTs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="FAS_GS_LOTs">
+              <PropertyRef Name="CloseByID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="CT_Сustomers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="СustomerName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ShortName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Contract_LOT" Relationship="FASModel.FK__Contract___Сusto__7EE1CA6C" FromRole="CT_Сustomers" ToRole="Contract_LOT" />
+        </EntityType>
+        <EntityType Name="EP_Doc">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDProtocol" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Visible" Type="Boolean" />
+          <Property Name="ContentType" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="NameFile" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="extension" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EP_Protocols" Relationship="FASModel.EP_protoc_fk" FromRole="EP_Doc" ToRole="EP_Protocols" />
+          <Property Name="LOTID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EP_Machine">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EP_PGName" Relationship="FASModel.EP_MAch_fk" FromRole="EP_Machine" ToRole="EP_PGName" />
+        </EntityType>
+        <EntityType Name="EP_PGName">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDProtocol" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IDMachine" Type="Int32" />
+          <Property Name="Visible" Type="Boolean" />
+          <Property Name="Type" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EP_Machine" Relationship="FASModel.EP_MAch_fk" FromRole="EP_PGName" ToRole="EP_Machine" />
+          <NavigationProperty Name="EP_Protocols" Relationship="FASModel.EP_Pg_fk" FromRole="EP_PGName" ToRole="EP_Protocols" />
+        </EntityType>
+        <EntityType Name="EP_Monitoring">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Line" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ProgrammName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="MaxModules" Type="Int32" />
+        </EntityType>
+        <Association Name="EP_MAch_fk">
+          <End Type="FASModel.EP_Machine" Role="EP_Machine" Multiplicity="0..1" />
+          <End Type="FASModel.EP_PGName" Role="EP_PGName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Machine">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_PGName">
+              <PropertyRef Name="IDMachine" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_TypeVer_fk">
+          <End Type="FASModel.EP_TypeVerification" Role="EP_TypeVerification" Multiplicity="1" />
+          <End Type="FASModel.EP_ProtocolsInfo" Role="EP_ProtocolsInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_TypeVerification">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_ProtocolsInfo">
+              <PropertyRef Name="TypeVerifID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_UserID_fk">
+          <End Type="FASModel.FAS_Users" Role="FAS_Users" Multiplicity="0..1" />
+          <End Type="FASModel.EP_ProtocolsInfo" Role="EP_ProtocolsInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="EP_ProtocolsInfo">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_Serv_fk">
+          <End Type="FASModel.EP_Service" Role="EP_Service" Multiplicity="0..1" />
+          <End Type="FASModel.EP_TypeVerification" Role="EP_TypeVerification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Service">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_TypeVerification">
+              <PropertyRef Name="IDService" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_Doc_fk">
+          <End Type="FASModel.EP_TypeDocument" Role="EP_TypeDocument" Multiplicity="0..1" />
+          <End Type="FASModel.EP_TypeVerification" Role="EP_TypeVerification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_TypeDocument">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_TypeVerification">
+              <PropertyRef Name="TypeDocID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EP_StepLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StepName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="EP_Log" Relationship="FASModel.fk_idStep" FromRole="EP_StepLog" ToRole="EP_Log" />
+        </EntityType>
+        <EntityType Name="FAS_Models">
+          <Key>
+            <PropertyRef Name="ModelID" />
+          </Key>
+          <Property Name="ModelID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ModelName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ModelTypeID" Type="Byte" Nullable="false" />
+          <Property Name="DelaySetting" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="TopMask" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BotMask" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="lenHDCP" Type="Int16" />
+          <Property Name="ChipCode" Type="Int16" />
+          <NavigationProperty Name="FAS_GS_LOTs" Relationship="FASModel.FK_FAS_GS_LOTs_FAS_Models" FromRole="FAS_Models" ToRole="FAS_GS_LOTs" />
+          <Property Name="CustomerID" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_FAS_GS_LOTs_FAS_Models">
+          <End Type="FASModel.FAS_Models" Role="FAS_Models" Multiplicity="1" />
+          <End Type="FASModel.FAS_GS_LOTs" Role="FAS_GS_LOTs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Models">
+              <PropertyRef Name="ModelID" />
+            </Principal>
+            <Dependent Role="FAS_GS_LOTs">
+              <PropertyRef Name="ModelID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EP_Log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDProtocol" Type="Int32" Nullable="true" />
+          <Property Name="IDVeryf" Type="Int32" />
+          <Property Name="UserID" Type="Int16" />
+          <Property Name="ServiceID" Type="Int32" />
+          <Property Name="Result" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IDStep" Type="Int32" Nullable="false" />
+          <Property Name="TOPBOT" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="DocumentID" Type="Int32" />
+          <NavigationProperty Name="EP_Protocols" Relationship="FASModel.EP_LogProtoc_fk" FromRole="EP_Log" ToRole="EP_Protocols" />
+          <NavigationProperty Name="EP_Service" Relationship="FASModel.EP_LogServ_fk" FromRole="EP_Log" ToRole="EP_Service" />
+          <NavigationProperty Name="FAS_Users" Relationship="FASModel.EP_LogUserID_fk" FromRole="EP_Log" ToRole="FAS_Users" />
+          <NavigationProperty Name="EP_TypeVerification" Relationship="FASModel.EP_LogVer_fk" FromRole="EP_Log" ToRole="EP_TypeVerification" />
+          <NavigationProperty Name="EP_StepLog" Relationship="FASModel.fk_idStep" FromRole="EP_Log" ToRole="EP_StepLog" />
+          <Property Name="LOTID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="EP_Protocols">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DateCreate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LOTID" Type="Int32" Nullable="false" />
+          <Property Name="TOPBOT" Type="Boolean" Nullable="false" />
+          <Property Name="IsActiveTOP" Type="Boolean" Nullable="false" />
+          <Property Name="StartStatusTOP" Type="Boolean" Nullable="false" />
+          <Property Name="StartStatusBOT" Type="Boolean" />
+          <Property Name="NameProtocol" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsActiveBOT" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="EP_Doc" Relationship="FASModel.EP_protoc_fk" FromRole="EP_Protocols" ToRole="EP_Doc" />
+          <NavigationProperty Name="EP_Log" Relationship="FASModel.EP_LogProtoc_fk" FromRole="EP_Protocols" ToRole="EP_Log" />
+          <NavigationProperty Name="EP_PGName" Relationship="FASModel.EP_Pg_fk" FromRole="EP_Protocols" ToRole="EP_PGName" />
+          <NavigationProperty Name="EP_ProtocolsInfo" Relationship="FASModel.EP_ProtocolInfo_fk" FromRole="EP_Protocols" ToRole="EP_ProtocolsInfo" />
+          <Property Name="Line" Type="Byte" />
+        </EntityType>
+        <Association Name="EP_protoc_fk">
+          <End Type="FASModel.EP_Protocols" Role="EP_Protocols" Multiplicity="0..1" />
+          <End Type="FASModel.EP_Doc" Role="EP_Doc" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Doc">
+              <PropertyRef Name="IDProtocol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogProtoc_fk">
+          <End Type="FASModel.EP_Protocols" Role="EP_Protocols" Multiplicity="0..1" />
+          <End Type="FASModel.EP_Log" Role="EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="IDProtocol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogServ_fk">
+          <End Type="FASModel.EP_Service" Role="EP_Service" Multiplicity="0..1" />
+          <End Type="FASModel.EP_Log" Role="EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Service">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="ServiceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogUserID_fk">
+          <End Type="FASModel.FAS_Users" Role="FAS_Users" Multiplicity="0..1" />
+          <End Type="FASModel.EP_Log" Role="EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FAS_Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_LogVer_fk">
+          <End Type="FASModel.EP_TypeVerification" Role="EP_TypeVerification" Multiplicity="0..1" />
+          <End Type="FASModel.EP_Log" Role="EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_TypeVerification">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="IDVeryf" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_idStep">
+          <End Type="FASModel.EP_StepLog" Role="EP_StepLog" Multiplicity="1" />
+          <End Type="FASModel.EP_Log" Role="EP_Log" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_StepLog">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_Log">
+              <PropertyRef Name="IDStep" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_Pg_fk">
+          <End Type="FASModel.EP_Protocols" Role="EP_Protocols" Multiplicity="0..1" />
+          <End Type="FASModel.EP_PGName" Role="EP_PGName" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_PGName">
+              <PropertyRef Name="IDProtocol" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EP_ProtocolInfo_fk">
+          <End Type="FASModel.EP_Protocols" Role="EP_Protocols" Multiplicity="1" />
+          <End Type="FASModel.EP_ProtocolsInfo" Role="EP_ProtocolsInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EP_Protocols">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="EP_ProtocolsInfo">
+              <PropertyRef Name="ProtocolID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Contract___Сusto__7EE1CA6C">
+          <End Type="FASModel.CT_Сustomers" Role="CT_Сustomers" Multiplicity="1" />
+          <End Type="FASModel.Contract_LOT" Role="Contract_LOT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CT_Сustomers">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Contract_LOT">
+              <PropertyRef Name="СustomersID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EP_Email">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NameAdress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище FASModelContainer" CdmEntityContainer="FASEntities">
+          <EntitySetMapping Name="EP_Result">
+            <EntityTypeMapping TypeName="FASModel.EP_Result">
+              <MappingFragment StoreEntitySet="EP_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Service">
+            <EntityTypeMapping TypeName="FASModel.EP_Service">
+              <MappingFragment StoreEntitySet="EP_Service">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_TypeDocument">
+            <EntityTypeMapping TypeName="FASModel.EP_TypeDocument">
+              <MappingFragment StoreEntitySet="EP_TypeDocument">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_TypeVerification">
+            <EntityTypeMapping TypeName="FASModel.EP_TypeVerification">
+              <MappingFragment StoreEntitySet="EP_TypeVerification">
+                <ScalarProperty Name="Sort" ColumnName="Sort" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="TypeDocID" ColumnName="TypeDocID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Manufacter" ColumnName="Manufacter" />
+                <ScalarProperty Name="Num" ColumnName="Num" />
+                <ScalarProperty Name="TOPBOT" ColumnName="TOPBOT" />
+                <ScalarProperty Name="IDService" ColumnName="IDService" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FAS_Users">
+            <EntityTypeMapping TypeName="FASModel.FAS_Users">
+              <MappingFragment StoreEntitySet="FAS_Users">
+                <ScalarProperty Name="IDService" ColumnName="IDService" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="RFID" ColumnName="RFID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="IsActiv" ColumnName="IsActiv" />
+                <ScalarProperty Name="UsersGroupID" ColumnName="UsersGroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_ProtocolsInfo">
+            <EntityTypeMapping TypeName="FASModel.EP_ProtocolsInfo">
+              <MappingFragment StoreEntitySet="EP_ProtocolsInfo">
+                <ScalarProperty Name="Itter" ColumnName="Itter" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="TOPBOT" ColumnName="TOPBOT" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Signature" ColumnName="Signature" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="TypeVerifID" ColumnName="TypeVerifID" />
+                <ScalarProperty Name="ProtocolID" ColumnName="ProtocolID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contract_LOT">
+            <EntityTypeMapping TypeName="FASModel.Contract_LOT">
+              <MappingFragment StoreEntitySet="Contract_LOT">
+                <ScalarProperty Name="DateManufacter" ColumnName="DateManufacter" />
+                <ScalarProperty Name="FASNumberFormat2" ColumnName="FASNumberFormat2" />
+                <ScalarProperty Name="LOT_Shipped" ColumnName="LOT_Shipped" />
+                <ScalarProperty Name="LOTSize" ColumnName="LOTSize" />
+                <ScalarProperty Name="СustomersID" ColumnName="СustomersID" />
+                <ScalarProperty Name="HexFasSN" ColumnName="HexFasSN" />
+                <ScalarProperty Name="StepSequence" ColumnName="StepSequence" />
+                <ScalarProperty Name="ParseLog" ColumnName="ParseLog" />
+                <ScalarProperty Name="SN_MAC_Param" ColumnName="SN_MAC_Param" />
+                <ScalarProperty Name="SingleSN" ColumnName="SingleSN" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="FASEndRange" ColumnName="FASEndRange" />
+                <ScalarProperty Name="FASStartRange" ColumnName="FASStartRange" />
+                <ScalarProperty Name="FASRangeChecked" ColumnName="FASRangeChecked" />
+                <ScalarProperty Name="FASNumberFormat" ColumnName="FASNumberFormat" />
+                <ScalarProperty Name="SMTEndRange" ColumnName="SMTEndRange" />
+                <ScalarProperty Name="SMTStartRange" ColumnName="SMTStartRange" />
+                <ScalarProperty Name="SMTRangeChecked" ColumnName="SMTRangeChecked" />
+                <ScalarProperty Name="SMTNumberFormat" ColumnName="SMTNumberFormat" />
+                <ScalarProperty Name="CheckFormatSN_FAS" ColumnName="CheckFormatSN_FAS" />
+                <ScalarProperty Name="CheckFormatSN_SMT" ColumnName="CheckFormatSN_SMT" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="PalletCapacity" ColumnName="PalletCapacity" />
+                <ScalarProperty Name="BoxCapacity" ColumnName="BoxCapacity" />
+                <ScalarProperty Name="LiterIndex" ColumnName="LiterIndex" />
+                <ScalarProperty Name="FullLOTCode" ColumnName="FullLOTCode" />
+                <ScalarProperty Name="Specification" ColumnName="Specification" />
+                <ScalarProperty Name="ModelID" ColumnName="ModelID" />
+                <ScalarProperty Name="LOTCode" ColumnName="LOTCode" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FAS_GS_LOTs">
+            <EntityTypeMapping TypeName="FASModel.FAS_GS_LOTs">
+              <MappingFragment StoreEntitySet="FAS_GS_LOTs">
+                <ScalarProperty Name="DateManufacter" ColumnName="DateManufacter" />
+                <ScalarProperty Name="CountinLot" ColumnName="CountinLot" />
+                <ScalarProperty Name="FakePalletNum" ColumnName="FakePalletNum" />
+                <ScalarProperty Name="FakeBoxNum" ColumnName="FakeBoxNum" />
+                <ScalarProperty Name="FakePackage" ColumnName="FakePackage" />
+                <ScalarProperty Name="IsWeighingPackage" ColumnName="IsWeighingPackage" />
+                <ScalarProperty Name="IsBunch" ColumnName="IsBunch" />
+                <ScalarProperty Name="SWVersion" ColumnName="SWVersion" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="FixedRG" ColumnName="FixedRG" />
+                <ScalarProperty Name="RangeEnd" ColumnName="RangeEnd" />
+                <ScalarProperty Name="RangeStart" ColumnName="RangeStart" />
+                <ScalarProperty Name="GetWeight" ColumnName="GetWeight" />
+                <ScalarProperty Name="Fixed_Range_Date" ColumnName="Fixed_Range_Date" />
+                <ScalarProperty Name="Fixed_Range" ColumnName="Fixed_Range" />
+                <ScalarProperty Name="CloseByID" ColumnName="CloseByID" />
+                <ScalarProperty Name="CloseDate" ColumnName="CloseDate" />
+                <ScalarProperty Name="CreateByID" ColumnName="CreateByID" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="SWGS1Read" ColumnName="SWGS1Read" />
+                <ScalarProperty Name="SWRead" ColumnName="SWRead" />
+                <ScalarProperty Name="ModelCheck" ColumnName="ModelCheck" />
+                <ScalarProperty Name="PTID" ColumnName="PTID" />
+                <ScalarProperty Name="MarketID" ColumnName="MarketID" />
+                <ScalarProperty Name="Operator" ColumnName="Operator" />
+                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+                <ScalarProperty Name="PalletCapacity" ColumnName="PalletCapacity" />
+                <ScalarProperty Name="BoxCapacity" ColumnName="BoxCapacity" />
+                <ScalarProperty Name="LiterIndex" ColumnName="LiterIndex" />
+                <ScalarProperty Name="LabelScenarioID" ColumnName="LabelScenarioID" />
+                <ScalarProperty Name="WorkingScenarioID" ColumnName="WorkingScenarioID" />
+                <ScalarProperty Name="IsMACUpload" ColumnName="IsMACUpload" />
+                <ScalarProperty Name="IsCertUpload" ColumnName="IsCertUpload" />
+                <ScalarProperty Name="IsHDCPUpload" ColumnName="IsHDCPUpload" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ModelID" ColumnName="ModelID" />
+                <ScalarProperty Name="Specification" ColumnName="Specification" />
+                <ScalarProperty Name="FULL_LOT_Code" ColumnName="FULL_LOT_Code" />
+                <ScalarProperty Name="LOTCode" ColumnName="LOTCode" />
+                <ScalarProperty Name="LOTID" ColumnName="LOTID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CT_Сustomers">
+            <EntityTypeMapping TypeName="FASModel.CT_Сustomers">
+              <MappingFragment StoreEntitySet="CT_Сustomers">
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="СustomerName" ColumnName="СustomerName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Doc">
+            <EntityTypeMapping TypeName="FASModel.EP_Doc">
+              <MappingFragment StoreEntitySet="EP_Doc">
+                <ScalarProperty Name="LOTID" ColumnName="LOTID" />
+                <ScalarProperty Name="extension" ColumnName="extension" />
+                <ScalarProperty Name="NameFile" ColumnName="NameFile" />
+                <ScalarProperty Name="ContentType" ColumnName="ContentType" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IDProtocol" ColumnName="IDProtocol" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Machine">
+            <EntityTypeMapping TypeName="FASModel.EP_Machine">
+              <MappingFragment StoreEntitySet="EP_Machine">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_PGName">
+            <EntityTypeMapping TypeName="FASModel.EP_PGName">
+              <MappingFragment StoreEntitySet="EP_PGName">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="IDMachine" ColumnName="IDMachine" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IDProtocol" ColumnName="IDProtocol" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Monitoring">
+            <EntityTypeMapping TypeName="FASModel.EP_Monitoring">
+              <MappingFragment StoreEntitySet="EP_Monitoring">
+                <ScalarProperty Name="MaxModules" ColumnName="MaxModules" />
+                <ScalarProperty Name="ProgrammName" ColumnName="ProgrammName" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_StepLog">
+            <EntityTypeMapping TypeName="FASModel.EP_StepLog">
+              <MappingFragment StoreEntitySet="EP_StepLog">
+                <ScalarProperty Name="StepName" ColumnName="StepName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FAS_Models">
+            <EntityTypeMapping TypeName="FASModel.FAS_Models">
+              <MappingFragment StoreEntitySet="FAS_Models">
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="ChipCode" ColumnName="ChipCode" />
+                <ScalarProperty Name="lenHDCP" ColumnName="lenHDCP" />
+                <ScalarProperty Name="BotMask" ColumnName="BotMask" />
+                <ScalarProperty Name="TopMask" ColumnName="TopMask" />
+                <ScalarProperty Name="DelaySetting" ColumnName="DelaySetting" />
+                <ScalarProperty Name="ModelTypeID" ColumnName="ModelTypeID" />
+                <ScalarProperty Name="ModelName" ColumnName="ModelName" />
+                <ScalarProperty Name="ModelID" ColumnName="ModelID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Log">
+            <EntityTypeMapping TypeName="FASModel.EP_Log">
+              <MappingFragment StoreEntitySet="EP_Log">
+                <ScalarProperty Name="LOTID" ColumnName="LOTID" />
+                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
+                <ScalarProperty Name="TOPBOT" ColumnName="TOPBOT" />
+                <ScalarProperty Name="IDStep" ColumnName="IDStep" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Result" ColumnName="Result" />
+                <ScalarProperty Name="ServiceID" ColumnName="ServiceID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="IDVeryf" ColumnName="IDVeryf" />
+                <ScalarProperty Name="IDProtocol" ColumnName="IDProtocol" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Protocols">
+            <EntityTypeMapping TypeName="FASModel.EP_Protocols">
+              <MappingFragment StoreEntitySet="EP_Protocols">
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="IsActiveBOT" ColumnName="IsActiveBOT" />
+                <ScalarProperty Name="NameProtocol" ColumnName="NameProtocol" />
+                <ScalarProperty Name="StartStatusBOT" ColumnName="StartStatusBOT" />
+                <ScalarProperty Name="StartStatusTOP" ColumnName="StartStatusTOP" />
+                <ScalarProperty Name="IsActiveTOP" ColumnName="IsActiveTOP" />
+                <ScalarProperty Name="TOPBOT" ColumnName="TOPBOT" />
+                <ScalarProperty Name="LOTID" ColumnName="LOTID" />
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EP_Email">
+            <EntityTypeMapping TypeName="FASModel.EP_Email">
+              <MappingFragment StoreEntitySet="EP_Email">
+                <ScalarProperty Name="NameAdress" ColumnName="NameAdress" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,44 @@
+﻿@model LoginData
+<h1>Электронный протокол запуска линии</h1>
+
+@if (TempData["Er"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Er"]
+    </div>
+}
+
+else
+{
+
+}
+
+<div class="Block">
+
+    @Html.Label("Введите пароль для входа", new { @class = "form-label" })
+    @using (Html.BeginForm("GetUserID", "Home", new { Loggin = true }, FormMethod.Post))
+    {
+        @Html.TextBoxFor(model => model.RFID, "", new { autocomplete = "off", autofocus = "on", placeholder = "Password", @type = "password" })
+        <input type = "submit" value = "Войти" />
+    }
+
+     @using (Html.BeginForm("GetUserID", "Home", new { Loggin = false }, FormMethod.Post))
+    {        
+        <input type = "submit" value = "Войти без логина" />
+    }
+
+</div>
+
+<style>
+    
+    .Block {
+        align-items: center;
+        padding: 5%;
+        margin:5%;
+        border: 2px dashed black;
+        font-size: 20px;
+    }
+       
+
+</style>
+
