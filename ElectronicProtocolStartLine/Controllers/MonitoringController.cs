@@ -58,17 +58,23 @@ namespace ElectronicProtocolStartLine.Controllers
         void CheckingProtocol()
         {      
             //Выгружаю список протоколов (ключ), которые потенциально могут запуститься и не запущены в текущее время
-            var listPrtotocols= fas.EP_Protocols.Where(c => c.IsActiveTOP != false || c.IsActiveBOT != false).Select(c => new PrtMon 
+            var listPrtotocols= fas.EP_ProtocolsInfo.GroupBy(c=> new { LOTID = c.EP_Protocols.LOTID, Line = c.line, TOPBOT = c.TOPBOT, ProtocolID = c.ProtocolID, Manuf = c.EP_TypeVerification.Manufacter })
+                .Where(c=>c.Key.Line != null)
+               .Select(c => new PrtMon 
             { 
-                ID = c.ID,
-                LOTID = c.LOTID,
-                IsStartStatusTOP = c.StartStatusTOP,
-                IsStartStatusBOT = (bool)c.StartStatusBOT, 
-                IsActiveTOP = c.IsActiveTOP, 
-                IsActiveBOT = c.IsActiveBOT,
-                Line = c.Line,
+                Manufacter = c.Key.Manuf,
+                ID = c.Key.ProtocolID,
+                LOTID = c.Key.LOTID,
+                IsStartStatusTOP = c.Select(b=>b.EP_Protocols.StartStatusTOP).FirstOrDefault(),
+                IsStartStatusBOT = (bool)c.Select(b => b.EP_Protocols.StartStatusBOT).FirstOrDefault(), 
+                IsActiveTOP = c.Select(b => b.EP_Protocols.IsActiveTOP).FirstOrDefault(), 
+                IsActiveBOT = c.Select(b => b.EP_Protocols.IsActiveBOT).FirstOrDefault(),
+                Line = c.Key.Line,
+                TOPBOT = c.Key.TOPBOT,
+                NameProtocol = c.Select(b=>b.EP_Protocols.NameProtocol).FirstOrDefault(),
+                
 
-            }).ToList();
+            }).Where(c => (c.IsActiveTOP != false || c.IsActiveBOT != false) & c.Manufacter == "Цех поверхностного монтажа").ToList();
           
             foreach (var item in listPrtotocols)
             {
@@ -76,21 +82,9 @@ namespace ElectronicProtocolStartLine.Controllers
                 viewdata.GetView(item.LOTID);
                 if (!viewdata.IsActive) continue;
 
-                if (item.IsActiveTOP) //Проверка ТОПА
-                {               
-                    if (item.IsStartStatusTOP)       //Протокол запущен               
-                        CheckStuckPrt(item,"TOP");
-                    else                             //-- Протокола которые не запущены           
-                        CheckStartPrt(item, "TOP");
-                }
-
-                if (item.IsActiveBOT) // Проверка БОТА
-                {  
-                    if ((bool)item.IsStartStatusBOT)  //Протокол запущен   
-                        CheckStuckPrt(item, "BOT");
-                    else                                //-- Протокола которые не запущены
-                        CheckStartPrt(item, "BOT");
-                }
+                               
+                CheckStuckPrt(item);//Проверка запущенного протокола  
+                CheckStartPrt(item);   //Проверка не запущенного протокола          
             }
 
             fas.SaveChanges();
@@ -100,10 +94,10 @@ namespace ElectronicProtocolStartLine.Controllers
             //Перечисление списка
         }
 
-        void CheckStuckPrt(PrtMon p, string _topbot)
+        void CheckStuckPrt(PrtMon p)
         {
             //Проверяем протокол на резлуьтат проверки
-            var result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID & c.EP_Protocols.Line == p.Line & c.Visible == true  & c.EP_TypeVerification.Manufacter != "Цех Сборки" & c.TOPBOT == _topbot)
+            var result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID & c.line == p.Line & c.Visible == true  & c.EP_TypeVerification.Manufacter == p.Manufacter & c.TOPBOT == p.TOPBOT & c.Start == true)
                 .Select(c => c.Result
                  ).Where(c=> c == null  || c == "NOK").ToList();
 
@@ -111,8 +105,8 @@ namespace ElectronicProtocolStartLine.Controllers
             if (result.Count() != 0)
             {
                 HttpStop(); //Остновка протокола
-                SetStartStatus(p, false, _topbot);
-                SetLog(p, 2, _topbot);
+                SetStartStatus(p);
+                SetLog(p,2);
 
                 Class.ViewData viewData = new Class.ViewData();
                 viewData.GetView(p.LOTID);
@@ -120,7 +114,7 @@ namespace ElectronicProtocolStartLine.Controllers
                 //Сообщение в почту о протоколе
                 string lineMes = $@"<div> <h2> Добрый день!</h2> </div>
                         <div> <h2> Заказ: {viewData.NameOrder}</h2> </div>
-                        <div style=""width: 500px; background-color:lightcoral""> <h2> Электронный протокол | {p.NameProtocol} Сторона {_topbot} | Линия {p.Line} | - Остановлен! </h2> </div>";
+                        <div style=""width: 500px; background-color:lightcoral""> <h2> Электронный протокол | {p.NameProtocol} Сторона {p.TOPBOT} | Линия {p.Line} | - Остановлен! </h2> </div>";
 
                 //var LineFuji = fas.EP_Log.Where(c => c.IDProtocol == p.ID & c.TOPBOT == _topbot).OrderByDescending(c => c.Date).Where(c => c.IDStep == 1).Select(c => c.Description).FirstOrDefault();
 
@@ -130,17 +124,17 @@ namespace ElectronicProtocolStartLine.Controllers
            
         }
 
-        void CheckStartPrt(PrtMon p, string _topbot)
-        {
-         
+        void CheckStartPrt(PrtMon p)
+        {         
             //Проверяем протокол на результат проверки
-            var result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID &  c.EP_Protocols.Line == p.Line & c.Visible == true & c.EP_TypeVerification.Manufacter != "Цех Сборки" & c.TOPBOT == _topbot)
+            var result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID &  c.line == p.Line & c.Visible == true 
+            & c.EP_TypeVerification.Manufacter == p.Manufacter & c.TOPBOT == p.TOPBOT & c.Start == false)
                 .Select(c => c.Result ).Where(c => c == null || c == "NOK").ToList();
 
             //Если ничего не найдено, значит проверка проткола прошла успешно, можно запускать линию
             if (result.Count() == 0)
             {
-                ClassProtocol protocol = new ClassProtocol(p, _topbot, p.LOTID);
+                ClassProtocol protocol = new ClassProtocol(p);
                 protocol.Start();
                 #region
                 ////foreach (var _topbot in fas.EP_ProtocolsInfo.Where(c=>c.ProtocolID == item).Select(c=>c.TOPBOT).Distinct())
@@ -179,11 +173,10 @@ namespace ElectronicProtocolStartLine.Controllers
                 return;               
 
             }
-
             //необходимо посмотреть сколько времени прошло с последнего действия пользователей, если проткол начали заполнять и прошло 12 часов, значит надо обнулить его
 
             //Записываем последний элемент записи шага и его даты 
-            var ListDateAfter = fas.EP_Log.Where(c => c.IDProtocol == p.ID & c.EP_Protocols.Line == p.Line & c.TOPBOT == _topbot  &new List<int>() { 1,4,2,3,5,14}.Contains(c.IDStep))
+            var ListDateAfter = fas.EP_Log.Where(c => c.IDProtocol == p.ID & c.line == p.Line & c.TOPBOT == p.TOPBOT  & c.EP_TypeVerification.Manufacter == p.Manufacter & new List<int>() { 1,4,2,3,5,14}.Contains(c.IDStep))
                 .OrderByDescending(c => c.Date)
                 .Select(c => new { date = c.Date, step = c.IDStep, Manuf = c.EP_TypeVerification.Manufacter}).ToList();
 
@@ -201,7 +194,7 @@ namespace ElectronicProtocolStartLine.Controllers
             //Если последний элемент был созданием лота или обнулиением, то берём первую дату после этих этапов
 
             if (DateAfter.step == 3 || DateAfter.step == 4 || DateAfter.step == 14) //Проткол создан или обновлён, смотрим первую дату после этих этапов
-                LastDateAction = fas.EP_Log.Where(b => b.IDProtocol == p.ID & b.EP_Protocols.Line == p.Line & b.IDVeryf != null & b.Date >= DateAfter.date & b.TOPBOT == _topbot)
+                LastDateAction = fas.EP_Log.Where(b => b.IDProtocol == p.ID & b.line == p.Line & b.IDVeryf != null & b.Date >= DateAfter.date & b.TOPBOT == p.TOPBOT)
                   .OrderBy(b => b.Date).Select(b => b.Date).FirstOrDefault();
             else if (DateAfter.step == 1)//Если протокол был запущен, значит выход
                 return;
@@ -217,39 +210,25 @@ namespace ElectronicProtocolStartLine.Controllers
 
             if (ResultDateSpan.TotalHours >= 12) //Если превышает 12 часов то обнуляем 
             {//Обновление протокола если прошло 12 часов после первых действий
-                RefreshProtocol(p, _topbot);
-                SetLog(p, 3, _topbot);
-            
+                RefreshProtocol(p);
+                SetLog(p, 3);            
                 Class.ViewData view = new Class.ViewData();
                 view.GetView(p.LOTID);
               
-                CreateNewProtocol(p, view, _topbot);
-
-                //Email.RunEmailFAS($"Обнулён заказ - | {view.NameOrder} |", $"<div><h2>Добрый день</h2></div>" +
-                //     $"<div><h2>Заказ: {view.NameOrder}</h2></div>" +
-                //    $" <div><h2>Электронный Протокол {p.NameProtocol} Сторона {_topbot} Линия {p.Line} обнулился <h2></div>");
+                CreateNewProtocol(p, view);
             }
 
         }
 
-        void CreateNewProtocol(PrtMon p,ViewData view, string TOPBOT)
+        void CreateNewProtocol(PrtMon p,ViewData view)
         {
-            CreateProtocol createProtocol = new CreateProtocol() { LOTID = p.LOTID, ProtocolID = p.ID, line = p.Line};
-            //ViewData view = new ViewData();
-            //view.GetView(createProtocol.LOTID);
+            CreateProtocol _cp = new CreateProtocol() {prtMon = p, Order = view.NameOrder};
+            _cp.GetCountProtocols();
+            _cp.AddInfo();
+            _cp.SetLOG();
 
-            createProtocol.Order = view.NameOrder;
-
-            createProtocol.GetCountProtocols();
-            //createProtocol.GenerateNameProtocol();
-            createProtocol.GetProtocolname();
-            //createProtocol.CrtProtocol();
-            //createProtocol.GeneratePGName();            
-            createProtocol.AddInfo(TOPBOT);
-            createProtocol.SetLOG(TOPBOT);
-
-            Email.SendEmailProtocol($"Обновление протокола {createProtocol.ProtocolName} Сторона {TOPBOT}. Заказ: {createProtocol.Order}", $@"<div><h2> Добрый день!</h2> </div>
-                        <div><h2> По Заказу { createProtocol.Order } обновлён новый протокол {createProtocol.ProtocolName}, Сторона {TOPBOT}, Линия {p.Line} </h2></div> ");
+            Email.SendEmailProtocol($"Обновление протокола {p.NameProtocol} Сторона {p.TOPBOT}. Заказ: {_cp.Order}", $@"<div><h2> Добрый день!</h2> </div>
+                        <div><h2> По Заказу { _cp.Order } обновлён новый протокол {p.NameProtocol}, Сторона {p.TOPBOT}, Линия {p.Line} </h2></div> ");
 
         }
 
@@ -263,28 +242,29 @@ namespace ElectronicProtocolStartLine.Controllers
 
         }
 
-        void RefreshProtocol(PrtMon p, string TOBOT)
+        void RefreshProtocol(PrtMon p)
         {
-            var list = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID & c.EP_Protocols.Line == p.Line & c.EP_TypeVerification.Manufacter != "Цех Сборки" & c.TOPBOT == TOBOT);
+            var list = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID & c.line == p.Line & c.EP_TypeVerification.Manufacter == p.Manufacter & c.TOPBOT == p.TOPBOT);
             foreach (var item in list)
             {
-                item.Signature = false;
+                //item.Signature = false;
                 item.Visible = false;              
             }
             
         }   
 
-        void SetLog(PrtMon p, int Step, string TOPBOT,string Desc = "")
+        void SetLog(PrtMon p, int Step, string Desc = "")
         {
-            var lotid = fas.EP_Protocols.Where(c => c.ID == p.ID & c.Line == p.Line).Select(b => b.LOTID).FirstOrDefault();
+            //var lotid = fas.EP_Protocols.Where(c => c.ID == p.ID & c.Line == p.Line).Select(b => b.LOTID).FirstOrDefault();
             EP_Log eP_Log = new EP_Log()
             {
                 IDProtocol = p.ID,
                 Description = Desc,
                 IDStep = Step,
-                TOPBOT = TOPBOT,
+                TOPBOT = p.TOPBOT,
                 Date = DateTime.UtcNow.AddHours(2),
-                LOTID = lotid,
+                LOTID = p.LOTID,
+                line = p.Line,
             };
 
             fas.EP_Log.Add(eP_Log);
@@ -295,22 +275,12 @@ namespace ElectronicProtocolStartLine.Controllers
         void HttpStop()
         { 
         
-        }
+        }       
 
-       
-
-        void SetStartStatus(PrtMon p,bool isStart, string TOPBOT)
+        void SetStartStatus(PrtMon p)
         {
-            var line = fas.EP_Protocols.Where(c => c.ID == p.ID & c.Line == p.Line).FirstOrDefault();
-            if (TOPBOT == "TOP") { 
-                line.StartStatusTOP = isStart;
-                line.IsActiveTOP = isStart;
-            }
-            else { 
-                line.StartStatusBOT = isStart;
-                line.IsActiveBOT = isStart;
-            }
-         
+            var line = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == p.ID & c.line == p.Line & c.EP_TypeVerification.Manufacter == p.Manufacter & c.TOPBOT == p.TOPBOT).ToList();
+            foreach (var item in line)  item.Start = true;     
         }      
 
         List<Fuji> GetFujis()

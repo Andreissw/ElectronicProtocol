@@ -24,6 +24,7 @@ namespace ElectronicProtocolStartLine.Controllers
             Session["Name"] = null;
             Session["UsID"] = null;
             Session["Service"] = null;
+            Session["Manuf"] = null;
 
             return View();
         }
@@ -40,6 +41,7 @@ namespace ElectronicProtocolStartLine.Controllers
                 Session["RFID"] = 0;
                 Session["Name"] = 0;
                 Session["UsID"] = 0;
+                Session["Manuf"] = 0;
                 return RedirectToAction("WorkForm");
             }
 
@@ -74,6 +76,7 @@ namespace ElectronicProtocolStartLine.Controllers
             Session["RFID"] = login.RFID;
             Session["Name"] = ListUser[0];
             Session["UsID"] = login.UserID;
+            Session["Manuf"] = ListUser[2];
             return RedirectToAction("WorkForm");
         }
 
@@ -141,56 +144,57 @@ namespace ElectronicProtocolStartLine.Controllers
         }
 
         [HttpPost] 
-        public ActionResult EditDetails(FormCollection fm)
+        //public ActionResult EditDetails(FormCollection fm)
+        public ActionResult EditDetails(int IDItem, int ProtocolID, string TOPBOT,int LOTID, byte? Line, GetProtocol Det )
         {
+
             if (Session["UsID"] == null)
                 return RedirectToAction("Index");
 
-            var id = int.Parse( fm["ID"].ToString());
-            var LOTID = int.Parse( fm["LOTID"].ToString());
-            if (fm["Result"] == null)
+            //var id = int.Parse(fm["ID"].ToString());
+            //var LOTID = int.Parse(fm["LOTID"].ToString());
+            //var Line = byte.Parse(fm["Line"].ToString());
+
+            if (Det.Result == null)
             {
-                TempData[$"Er{fm["item.ID"].ToString()}"] = $"Укажите Результат проверки";
+                TempData[$"Er{IDItem}"] = $"Укажите Результат проверки";
                 TempData["Er"] = "Ошибка ввода!";
-                return RedirectToAction("EditProtocol", "Lot", new { ID = id, LOTID = LOTID, TOPBOT = fm["TOPBOT"].ToString() });
+                return RedirectToAction("EditProtocol", "Lot", new { ID = ProtocolID, LOTID = LOTID, TOPBOT = TOPBOT, line = Line });
             }
 
-            if (fm["item.RFID"] == "")
+            if (Det.RFID == "")
             {
-                TempData[$"Er{fm["item.ID"].ToString()}"] = $"Отсканируйте бейджик";
+                TempData[$"Er{IDItem}"] = $"Отсканируйте бейджик";
                 TempData["Er"] = "Ошибка ввода!";
-                return RedirectToAction("EditProtocol", "Lot", new { ID = id, LOTID = LOTID, TOPBOT = fm["TOPBOT"].ToString() });
+                return RedirectToAction("EditProtocol", "Lot", new { ID = ProtocolID, LOTID = LOTID, TOPBOT = TOPBOT, line = Line });
             }
 
-            var RFID = fm["item.RFID"].ToString();
-            var IDPrInf = int.Parse( fm["item.ID"].ToString());
-           
+            //var RFID = fm["item.RFID"].ToString();
+            //var IDPrInf = int.Parse(fm["item.ID"].ToString());
 
-            var resultPRID = fas.EP_ProtocolsInfo.Where(b => b.ID == IDPrInf).Select(b =>
-            
-                new { 
-                    
+            var resultPRID = fas.EP_ProtocolsInfo.Where(b => b.ID == IDItem).Select(b =>   new
+                {
                     IDService = fas.EP_TypeVerification.Where(c => c.ID == b.TypeVerifID).Select(c => c.IDService).FirstOrDefault(),
-                    Serive = fas.EP_Service.Where(x=>x.ID == fas.EP_TypeVerification.Where(c => c.ID == b.TypeVerifID).Select(c => c.IDService).FirstOrDefault()).Select(x=>x.Name).FirstOrDefault(),                
-                
-                } ).ToList();
+                    Serive = fas.EP_Service.Where(x => x.ID == fas.EP_TypeVerification.Where(c => c.ID == b.TypeVerifID).Select(c => c.IDService).FirstOrDefault()).Select(x => x.Name).FirstOrDefault(),
 
-            var ListUserData = fas.FAS_Users.Where(c => c.RFID == RFID).Select(c => 
-            
-            new { 
-                ServiceID = c.IDService, 
-                Name = c.UserName.Replace("."," "), 
-                Service = fas.EP_Service.Where(x=>x.ID == c.IDService).Select(x=>x.Name).FirstOrDefault(),
                 }).ToList();
+
+            var ListUserData = fas.FAS_Users.Where(c => c.RFID == Det.RFID).Select(c => new
+            {
+                ServiceID = c.IDService,
+                Name = c.UserName.Replace(".", " "),
+                Service = fas.EP_Service.Where(x => x.ID == c.IDService).Select(x => x.Name).FirstOrDefault(),
+
+            }).ToList();
 
 
             if (ListUserData.Count == 0)
             {
-                TempData[$"Er{fm["item.ID"].ToString()}"] = "В базе не найден пользователь";
+                TempData[$"Er{IDItem}"] = "В базе не найден пользователь";
                 TempData["Er"] = "Ошибка ввода!";
-                return RedirectToAction("EditProtocol", "Lot", new { ID = id, LOTID = LOTID, TOPBOT = fm["TOPBOT"].ToString() });
+                return RedirectToAction("EditProtocol", "Lot", new { ID = ProtocolID, LOTID = LOTID, TOPBOT = TOPBOT, line = Line });
             }
-            
+
 
             if (resultPRID.FirstOrDefault().IDService != ListUserData.FirstOrDefault().ServiceID)
             {
@@ -200,37 +204,37 @@ namespace ElectronicProtocolStartLine.Controllers
                 {
                     Message = $"У пользователя {ListUserData.FirstOrDefault().Name} в базе не установлена служба Обратитесь к разработичку (Володин А А)";
                 }
-                else 
+                else
                 {
                     Message = $"Пользователь {ListUserData.FirstOrDefault().Name} который находится в службе {ListUserData.FirstOrDefault().Service} Не имеет возможности изменять протоколы службы {resultPRID.FirstOrDefault().Serive}";
-                }                
+                }
 
-                TempData[$"Er{fm["item.ID"].ToString()}"] = Message;
+                TempData[$"Er{IDItem}"] = Message;
                 TempData["Er"] = "Ошибка ввода!";
-                return RedirectToAction("EditProtocol", "Lot", new { ID = id, LOTID = LOTID, TOPBOT = fm["TOPBOT"].ToString() });
+                return RedirectToAction("EditProtocol", "Lot", new { ID = ProtocolID, LOTID = LOTID, TOPBOT = TOPBOT, line = Line });
             }
 
-            if (Session["RFID"].ToString() != RFID)
+            if (Session["RFID"].ToString() != Det.RFID)
             {
-                TempData[$"Er{fm["item.ID"].ToString()}"] = $"Учетная запись под которой зашли в систему - {Session["Name"].ToString().Replace("."," ")} не совпадает с отсканированным бейджиком {ListUserData.FirstOrDefault().Name}";
+                TempData[$"Er{IDItem}"] = $"Учетная запись под которой зашли в систему - {Session["Name"].ToString().Replace(".", " ")} не совпадает с отсканированным бейджиком {ListUserData.FirstOrDefault().Name}";
                 TempData["Er"] = "Ошибка ввода!";
-                return RedirectToAction("EditProtocol", "Lot", new { ID = id, LOTID = LOTID, TOPBOT = fm["TOPBOT"].ToString() });
+                return RedirectToAction("EditProtocol", "Lot", new { ID = ProtocolID, LOTID = LOTID, TOPBOT = TOPBOT, line = Line });
             }
 
-            var Result = fm["Result"].ToString();
-            var desc = fm["item.Description"].ToString();
-            desc = desc.Substring(0, desc.IndexOf(','));
+            //var Result = fm["Result"].ToString();
+            //var desc = fm["item.Description"].ToString();
 
-            ProtocolEdit(IDPrInf, Result,desc);
+            //Det.Description = Det.Description.Substring(0, Det.Description.IndexOf(','));
 
-            var idveryf = fas.EP_ProtocolsInfo.Where(c => c.ID == IDPrInf).FirstOrDefault().TypeVerifID;
-            var TOBOT = fm["TOPBOT"].ToString();
+            ProtocolEdit(IDItem, Det.Result, Det.Description);
+
+            var idveryf = fas.EP_ProtocolsInfo.Where(c => c.ID == IDItem).FirstOrDefault().TypeVerifID;           
 
 
-            SetLog((int)resultPRID.FirstOrDefault().IDService, desc, id, idveryf, Result,5, TOBOT, LOTID);
+            SetLog((int)resultPRID.FirstOrDefault().IDService, Det.Description, ProtocolID, idveryf, Det.Result, 5, TOPBOT, LOTID, Line);
 
-            TempData["Success"] = "Изменении в протоколе прошли успешно!";           
-            return RedirectToAction("EditProtocol", "Lot", new { ID = id, LOTID = LOTID, TOPBOT = TOBOT });
+            TempData["Success"] = "Изменении в протоколе прошли успешно!";
+            return RedirectToAction("EditProtocol", "Lot", new { ID = ProtocolID, LOTID = LOTID, TOPBOT = TOPBOT, line = Line });
         }
 
 
@@ -244,7 +248,7 @@ namespace ElectronicProtocolStartLine.Controllers
             fas.SaveChanges();
         }
 
-        void SetLog(int ServiceID, string desc, int IDProtocol, int idVeryf, string Result,int Step,string TOPBOT, int LOTID)
+        void SetLog(int ServiceID, string desc, int IDProtocol, int idVeryf, string Result,int Step,string TOPBOT, int LOTID, byte? line)
         {
             EP_Log log = new EP_Log()
             {
@@ -258,134 +262,12 @@ namespace ElectronicProtocolStartLine.Controllers
                 IDStep = Step,
                 TOPBOT = TOPBOT,
                 LOTID = LOTID,
-
+                line = line
             };
 
             fas.EP_Log.Add(log);
             fas.SaveChanges();
         }
-
-
-        
-
-      
-
-       
-
-        List<DetailsFrom> SetDetail(List<DetailsFrom> details, string Manuf)
-        {
-            List<DetailsFrom> d = new List<DetailsFrom>();
-            foreach (var item in details.Where(c=>c.Manuf == Manuf))
-            {
-                var det = new DetailsFrom()
-                {
-                    ID = item.ID,
-                    LastResult = item.LastResult,
-                    LastUserResult = item.LastUserResult,
-                    DateCheck = item.DateCheck,
-                    DocCheck = item.DocCheck,
-                    Manuf = item.Manuf,
-                    Result = item.Result,
-                    Service = item.Service,
-                    TypeVerification = item.TypeVerification,
-                    UserName = item.UserName,
-                    BOTTOB = item.BOTTOB,
-                    Description = item.Description,    
-                };
-
-                d.Add(det);                
-            }
-
-            return d;
-        }
-
-      
-
-        [HttpPost]
-        //public ActionResult Create(CreateProtocol createProtocol)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        ModelState.AddModelError("", "Неверно введены данные");
-        //        TempData["Er"] = "Неверный тип ввода данных";
-        //        return RedirectToAction("CreateProtocol");
-        //    }
-
-        //    foreach (var item in ModelState.Values)           
-        //        if (item.Value.AttemptedValue  == "")
-        //        {
-        //            ModelState.AddModelError("", "Неверно введены данные");
-        //            TempData["Emp"] = $"Не все поля заполенные";
-        //            return RedirectToAction("CreateProtocol");
-        //        }
-
-        //    if (Session["RFID"].ToString() != createProtocol.LoginData.RFID)
-        //    {
-        //        ModelState.AddModelError("", "Неверно введены данные");
-        //        TempData["NotPass"] = $"Ошибка создание протокола, отсканированный бейджик(RFID) не совпадает с бейджиком(RFID), который был отсканирован при входе";
-        //        return RedirectToAction("CreateProtocol");
-        //    }
-
-
-        //    if (CheckNameSpec(createProtocol))
-        //    {
-        //        ModelState.AddModelError("", "Неверно введены данные");
-        //        TempData["Name"] = $"С таким именем уже создана спецификация";
-        //        return RedirectToAction("CreateProtocol");
-        //    }
-
-            
-        //    //var ID = ADDProtocol(createProtocol);
-        //    AddInfo(ID);
-        //    var IDService = fas.EP_Service.Where(c => fas.FAS_Users.Where(b => b.RFID == createProtocol.LoginData.RFID).FirstOrDefault().IDService == c.ID).FirstOrDefault().ID;
-        //    SetLog(IDService,ID);
-
-        //    return RedirectToAction("WorkForm", "Home", createProtocol.LoginData);
-        //}      
-
-        //bool CheckNameSpec(CreateProtocol CP)
-        //{
-        //   return fas.EP_Protocols.Where(c => c.NameSpec == CP.NameSpec).Select(c => c.NameSpec == c.NameSpec).FirstOrDefault();
-        //}
-
-        void AddInfo(int ProtocolID)
-        {
-            
-            var IdList = fas.EP_TypeVerification.OrderBy(c => c.Manufacter).ThenBy(c=>c.Num).ToList();
-
-            foreach (var item in IdList)
-            {
-                EP_ProtocolsInfo INFO = new EP_ProtocolsInfo()
-                {
-                    TypeVerifID = item.ID,
-                    DateCreate = DateTime.UtcNow.AddHours(2),
-                    ProtocolID = ProtocolID,
-                    Signature = false,
-                };
-
-                fas.EP_ProtocolsInfo.Add(INFO);
-            }
-
-            fas.SaveChanges();
-        }
-
-        //int ADDProtocol(CreateProtocol CP)
-        //{
-        //    EP_Protocols ep = new EP_Protocols()
-        //    {
-        //        NameClient = CP.NameClient,
-        //        NameOrder = CP.NameOrder,
-        //        DateCreate = DateTime.UtcNow.AddHours(2),
-        //        NameSpec = CP.NameSpec,
-        //        ManufLevel = "Входной контроль",
-        //    };
-
-        //    fas.EP_Protocols.Add(ep);
-        //    fas.SaveChanges();
-        //    var ID = fas.EP_Protocols.OrderByDescending(c=>c.ID).FirstOrDefault().ID;
-        //    return ID;
-        //}
-
         List<string> CheckUser(string RFID)
         {
             List<string> list = new List<string>();
@@ -393,7 +275,8 @@ namespace ElectronicProtocolStartLine.Controllers
             new
             {
                  name = c.UserName,
-                 service = fas.EP_Service.Where(b => b.ID == c.IDService).FirstOrDefault().Name
+                 service = fas.EP_Service.Where(b => b.ID == c.IDService).FirstOrDefault().Name,
+                 manufacter = fas.EP_Service.Where(b=> b.ID == c.IDService).FirstOrDefault().Manufacter,
 
             }).ToList();
 
@@ -401,6 +284,7 @@ namespace ElectronicProtocolStartLine.Controllers
             {
                 list.Add(item.name);
                 list.Add(item.service);
+                list.Add(item.manufacter);
             }
             return list;
            

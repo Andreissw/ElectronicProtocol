@@ -87,6 +87,7 @@
           <Property Name="TOPBOT" Type="nvarchar" MaxLength="3" />
           <Property Name="DocumentID" Type="int" />
           <Property Name="LOTID" Type="int" />
+          <Property Name="line" Type="tinyint" />
         </EntityType>
         <EntityType Name="EP_Machine">
           <Key>
@@ -114,6 +115,7 @@
           <Property Name="IDMachine" Type="int" />
           <Property Name="Visible" Type="bit" />
           <Property Name="Type" Type="nvarchar" MaxLength="3" />
+          <Property Name="line" Type="tinyint" />
         </EntityType>
         <EntityType Name="EP_Protocols">
           <Key>
@@ -145,6 +147,8 @@
           <Property Name="Visible" Type="bit" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="Itter" Type="smallint" />
+          <Property Name="line" Type="tinyint" />
+          <Property Name="Start" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="EP_Result">
           <Key>
@@ -159,6 +163,7 @@
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Manufacter" Type="nvarchar" MaxLength="40" />
         </EntityType>
         <EntityType Name="EP_StepLog">
           <Key>
@@ -569,6 +574,7 @@
           <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="EP_TypeVerification" Relationship="FASModel.EP_Serv_fk" FromRole="EP_Service" ToRole="EP_TypeVerification" />
           <NavigationProperty Name="EP_Log" Relationship="FASModel.EP_LogServ_fk" FromRole="EP_Service" ToRole="EP_Log" />
+          <Property Name="Manufacter" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="EP_TypeDocument">
           <Key>
@@ -717,6 +723,8 @@
           <NavigationProperty Name="EP_Protocols" Relationship="FASModel.EP_ProtocolInfo_fk" FromRole="EP_ProtocolsInfo" ToRole="EP_Protocols" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Itter" Type="Int16" />
+          <Property Name="line" Type="Byte" />
+          <Property Name="Start" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Contract_LOT">
           <Key>
@@ -870,6 +878,7 @@
           <Property Name="Type" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="EP_Machine" Relationship="FASModel.EP_MAch_fk" FromRole="EP_PGName" ToRole="EP_Machine" />
           <NavigationProperty Name="EP_Protocols" Relationship="FASModel.EP_Pg_fk" FromRole="EP_PGName" ToRole="EP_Protocols" />
+          <Property Name="line" Type="Byte" />
         </EntityType>
         <EntityType Name="EP_Monitoring">
           <Key>
@@ -996,6 +1005,7 @@
           <NavigationProperty Name="EP_TypeVerification" Relationship="FASModel.EP_LogVer_fk" FromRole="EP_Log" ToRole="EP_TypeVerification" />
           <NavigationProperty Name="EP_StepLog" Relationship="FASModel.fk_idStep" FromRole="EP_Log" ToRole="EP_StepLog" />
           <Property Name="LOTID" Type="Int32" />
+          <Property Name="line" Type="Byte" />
         </EntityType>
         <EntityType Name="EP_Protocols">
           <Key>
@@ -1150,6 +1160,7 @@
           <EntitySetMapping Name="EP_Service">
             <EntityTypeMapping TypeName="FASModel.EP_Service">
               <MappingFragment StoreEntitySet="EP_Service">
+                <ScalarProperty Name="Manufacter" ColumnName="Manufacter" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
@@ -1193,6 +1204,8 @@
           <EntitySetMapping Name="EP_ProtocolsInfo">
             <EntityTypeMapping TypeName="FASModel.EP_ProtocolsInfo">
               <MappingFragment StoreEntitySet="EP_ProtocolsInfo">
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="line" ColumnName="line" />
                 <ScalarProperty Name="Itter" ColumnName="Itter" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Visible" ColumnName="Visible" />
@@ -1324,6 +1337,7 @@
           <EntitySetMapping Name="EP_PGName">
             <EntityTypeMapping TypeName="FASModel.EP_PGName">
               <MappingFragment StoreEntitySet="EP_PGName">
+                <ScalarProperty Name="line" ColumnName="line" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Visible" ColumnName="Visible" />
                 <ScalarProperty Name="IDMachine" ColumnName="IDMachine" />
@@ -1369,6 +1383,7 @@
           <EntitySetMapping Name="EP_Log">
             <EntityTypeMapping TypeName="FASModel.EP_Log">
               <MappingFragment StoreEntitySet="EP_Log">
+                <ScalarProperty Name="line" ColumnName="line" />
                 <ScalarProperty Name="LOTID" ColumnName="LOTID" />
                 <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
                 <ScalarProperty Name="TOPBOT" ColumnName="TOPBOT" />

@@ -23,8 +23,7 @@ namespace ElectronicProtocolStartLine.Class
         public string Order { get; set; }
         public Infos OTKProtocol { get; set; }
         public Infos ListInfoFAS { get; set; }
-        public Infos ListInfoSMT { get; set; }
-
+        public Infos ListInfoSMT { get; set; }        
         public List<Infos> Infos { get; set; }
 
     }
@@ -79,6 +78,9 @@ namespace ElectronicProtocolStartLine.Class
         public string Manuf { get; set; }
 
         public bool TypeTobBot { get; set; }
+
+        public byte? Line { get; set; }
+        
     }
 
     public class OTKInfo

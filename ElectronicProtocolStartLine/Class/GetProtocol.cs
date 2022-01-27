@@ -26,6 +26,15 @@ namespace ElectronicProtocolStartLine
         public string NameProtocol { get; set; }
         public string TOPBOT { get; set; }
         public string SelectResult { get; set; }
+        public byte? Line { get; set; }
+        public string Manuf { get; set; }
+
+        public string RFID { get; set; }
+
+        public string Result { get; set; }
+
+        public string Description { get; set; }
+
         public Protocol protocolSMT { get; set; }
         public Protocol protocolFAS { get; set; }
         public Protocol ProtocolOTK { get; set; }

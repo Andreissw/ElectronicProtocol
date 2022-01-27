@@ -14,6 +14,8 @@ namespace ElectronicProtocolStartLine.Class.Monitoring
         public bool IsActiveTOP { get; set; }
         public bool IsActiveBOT { get; set; }
 
+        public string Manufacter { get; set; }
+        public string TOPBOT { get; set; }
         public string NameProtocol { get; set; }
 
         public byte? Line { get;set; }

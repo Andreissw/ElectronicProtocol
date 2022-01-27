@@ -14,11 +14,14 @@
 </head>
 
 <div style="display: block; margin:2px;">
-    <div>@Html.ActionLink("Вернутся к списку протоколов", "Index", new { LOTID = Model.LOTID}, htmlAttributes: new { @class = "btn btn-success" })</div>    
-    <div>  @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = Model.ID, LOTID = Model.LOTID, NameProtocol = Model.NameProtocol, NameOrder = Model.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" }) </div>
+    <div>@Html.ActionLink("Перейти к списку протоколов", "Index", new { LOTID = Model.LOTID }, htmlAttributes: new { @class = "btn btn-success" })</div>
+    <div>@Html.ActionLink("Перейти к списку Заказов", "WorkForm", "Home", htmlAttributes: new { @class = "btn btn-success" })</div>
+    @*<div>  @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = Model.ID, LOTID = Model.LOTID, NameProtocol = Model.NameProtocol, NameOrder = Model.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" }) </div>*@
 </div>
 
-<h2>Просмотр протокола</h2>
+<div>
+    <h3>Протокол: @Model.NameProtocol . Линия: @Model.Line . Сторона: @Model.TOPBOT   </h3> 
+</div>
 @*<h3>Служба - @Session["Service"] </h3>
 <h3>Пользователь - @Session["Name"]</h3>*@
 
@@ -29,9 +32,7 @@
     </H2>
 }
 
-    <div style="display: block; align-items: baseline; margin: 4%">
-        <h4>Сторона @Model.TOPBOT</h4>
-        <h1>Протокол - @Model.NameProtocol </h1>
+    <div style="display: block; align-items: baseline; margin: 4%">        
 
         @if (TempData[$"Er"] != null)
         {
@@ -44,21 +45,15 @@
             {
 
                 @Html.AntiForgeryToken()
-                <div id="form" style="border-top: 1px solid gray; border-bottom: 5px dashed black; background-color: khaki; padding-bottom:2%; margin-bottom: 3.5%; height:750px; overflow-y: scroll;">
+                <div id="form" style="border-top: 1px solid gray; border-bottom: 5px dashed black; background-color: khaki; padding-bottom:2%; margin-bottom: 3.5%; height:1200px; overflow-y: scroll; font-size:10px;">
 
                     <h1 style="text-align: center"> @ListItem.Name </h1>
 
                     @foreach (var item in ListItem.Details)
                     {
 
-                        using (Html.BeginForm("EditDetails", "Home", FormMethod.Post))
-                        {
-                      
-                                @Html.HiddenFor(model => @Model.ID)
-                                @Html.HiddenFor(model => @item.ID)
-                                @Html.HiddenFor(model => Model.TOPBOT)
-                                @Html.HiddenFor(model => Model.LOTID)
-                                
+                        using (Html.BeginForm("EditDetails", "Home", new { IDItem = item.ID, ProtocolID = Model.ID, TOPBOT = Model.TOPBOT, LOTID = Model.LOTID, Line = Model.Line}, FormMethod.Post,""))
+                        {                             
                            
                             @*<div style=" display: inline-flex; align-items:center; margin: 1%; ">*@
                             <div style=" display: block; padding:1%; width: 100%;">
@@ -108,7 +103,8 @@
                                         </div>
 
                                         <div>
-                                            @Html.TextBoxFor(model => item.RFID,new  { @class = "form-control", @type = "password", @Value = "" }  )
+                                            @Html.TextBox("RFID", "", new { @class = "form-control", @type = "password", @Value = "" })
+                                            @Html.HiddenFor(model => Model.RFID)
                                         </div>
 
                                     </div>
@@ -118,8 +114,8 @@
                                             @Html.Label("Описание")
                                         </div>
                                         <div>
-                                            @Html.TextAreaFor(model => item.Description, new { @class = "form-control", @maxlength = "500", @value = "" })
-                                            @Html.HiddenFor(model => item.Description)
+                                            @Html.TextArea("Description", "", new { @class = "form-control", @maxlength = "500", @value = "" })
+                                            @Html.HiddenFor(model => Model.Description)
                                         </div>
                                     </div>
 
@@ -140,10 +136,7 @@
                                             else
                                             {
                                                 st = Yellow;
-                                            }
-
-                                        
-
+                                            }                 
 
                                             <div style='display:block; align-content: center; margin:2%;padding:2%; background-color: aliceblue' >
 
@@ -164,6 +157,7 @@
 
                                             </div>
                                         }
+                                        
                                      }
 
 

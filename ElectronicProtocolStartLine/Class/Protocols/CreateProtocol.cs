@@ -1,4 +1,5 @@
-﻿using ElectronicProtocolStartLine.Class.Protocols;
+﻿using ElectronicProtocolStartLine.Class.Monitoring;
+using ElectronicProtocolStartLine.Class.Protocols;
 using ElectronicProtocolStartLine.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace ElectronicProtocolStartLine
     public class CreateProtocol
     {
         public List<SelectListItem> ListOrders { get; set; }
+
+        public PrtMon prtMon { get; set; }
         public int CountProtocols { get; set; } = 1;
         public List<SelectListItem> TOPBOT { get; set; }
         public int ProtocolID { get; set; }
@@ -34,7 +37,7 @@ namespace ElectronicProtocolStartLine
         {
             using (var fas = new FASEntities())
             {
-                CountProtocols = fas.EP_Protocols.Where(c => c.LOTID == LOTID & c.Line == line).Count();
+                CountProtocols = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == prtMon.ID & c.line == prtMon.Line & c.EP_TypeVerification.Manufacter == prtMon.Manufacter & c.TOPBOT == prtMon.TOPBOT).Max(c=>c.Itter).Value;
             }
         }
         public void GenerateNameProtocol()
@@ -53,7 +56,7 @@ namespace ElectronicProtocolStartLine
         {
             using (var fas = new FASEntities())
             {
-                ProtocolName = fas.EP_Protocols.Where(c => c.LOTID == LOTID & c.Line == line).Select(c => c.NameProtocol).FirstOrDefault();
+                ProtocolName = fas.EP_Protocols.Where(c => c.LOTID == LOTID).Select(c => c.NameProtocol).FirstOrDefault();
             }           
         }
 
@@ -82,42 +85,35 @@ namespace ElectronicProtocolStartLine
             }
         }
 
-        public void AddInfo(string TOBBOT)
+        public void AddInfo()
         {
             using (var fas = new FASEntities())
             {
                 //var IdList = fas.EP_TypeVerification.OrderBy(c => c.Manufacter).ThenBy(c => c.Num).Where(c => c.Manufacter != "Цех поверхностного монтажа").ToList();
                 //addinfo(IdList);
 
-                var IdList = fas.EP_TypeVerification.OrderBy(c => c.Manufacter).ThenBy(c => c.Num).Where(c => c.Manufacter != "Цех Сборки").ToList();
-                addinfo(IdList, TOBBOT);
-
-                void addinfo(List<EP_TypeVerification> list, string TOP)
+                var IdList = fas.EP_TypeVerification.OrderBy(c => c.Manufacter).ThenBy(c => c.Num).Where(c => c.Manufacter == prtMon.Manufacter ).ToList();                
+                
+                foreach (var item in IdList)
                 {
-                    bool vis = true;
-
-                    if (TOP == "BOT")
-                        vis = fas.EP_Protocols.Where(c => c.ID == ProtocolID).Select(c => c.TOPBOT).FirstOrDefault();
-
-
-                    foreach (var item in list)
+                    EP_ProtocolsInfo INFO = new EP_ProtocolsInfo()
                     {
-                        EP_ProtocolsInfo INFO = new EP_ProtocolsInfo()
-                        {
-                            TypeVerifID = item.ID,
-                            DateCreate = DateTime.UtcNow.AddHours(2),
-                            ProtocolID = ProtocolID,
-                            Signature = false,
-                            TOPBOT = TOP,
-                            Visible = vis,
-                            Itter = (short)(CountProtocols + 1),
-                        };
-
-                        fas.EP_ProtocolsInfo.Add(INFO);
-                    }
-
-                    fas.SaveChanges();
+                        TypeVerifID = item.ID,
+                        DateCreate = DateTime.UtcNow.AddHours(2),
+                        ProtocolID = prtMon.ID,
+                        Signature = false,
+                        TOPBOT = prtMon.TOPBOT,
+                        Visible = true,
+                        Itter = (short)(CountProtocols + 1),
+                        line = prtMon.Line,
+                        Start = false,                        
+                    };
+                
+                    fas.EP_ProtocolsInfo.Add(INFO);
                 }
+
+                fas.SaveChanges();
+
             }
         }
 
@@ -193,7 +189,7 @@ namespace ElectronicProtocolStartLine
 
         }
 
-        public void SetLOG(string TOPBOT)
+        public void SetLOG()
         {
             using (FASEntities fas = new FASEntities())
             {
@@ -201,16 +197,15 @@ namespace ElectronicProtocolStartLine
                 EP_Log log = new EP_Log()
                 {
                     IDProtocol = ProtocolID,
-                    //UserID = (short)UserID,
-                    //ServiceID = GetServiceID(),
+                    line = prtMon.Line,
                     Date = DateTime.UtcNow.AddHours(2),
                     IDStep = 6,
                     LOTID = LOTID,
-                    TOPBOT = TOPBOT,                   
+                    TOPBOT = prtMon.TOPBOT,        
+                    
                 };
 
-                fas.EP_Log.Add(log);
-                fas.SaveChanges();
+                fas.EP_Log.Add(log);                
             }
         }
 

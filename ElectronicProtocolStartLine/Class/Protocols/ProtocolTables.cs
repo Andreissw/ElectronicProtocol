@@ -13,18 +13,14 @@ namespace ElectronicProtocolStartLine.Class.Protocols
         public string NameProtocol { get; set; }
         public string NameOrder { get; set; }
         public string Spec { get; set; }
+        public string Manuf { get; set; }
         public List<Programms> Programms { get; set; }
         public string TOPBOT { get; set; }
         public DateTime DateCreate { get; set; }
-        public TOBOT TOP { get; set; }
-
-        public TOBOT BOT { get; set; }
-
+        public TOBOT InfoTOPBOT { get; set; }
         public bool IsActiveTOP { get; set; }
-
         public bool IsActiveBOT { get; set; }
-
-        public byte? Line { get; set; }
+        public byte? Line { get; set; }     
 
     }
 

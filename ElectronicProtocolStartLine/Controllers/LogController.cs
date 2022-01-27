@@ -19,6 +19,7 @@ namespace ElectronicProtocolStartLine.Controllers
 
             logInfo.Logs = fas.EP_Log.OrderByDescending(c => c.Date).Select(c => new Logs
             {
+                Line = c.line,
                 Date = c.Date,
                 Description = c.Description,
                 TypeVeryf = c.EP_TypeVerification.Name,

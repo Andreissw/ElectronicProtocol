@@ -33,6 +33,8 @@ public partial class EP_Service
 
     public string Name { get; set; }
 
+    public string Manufacter { get; set; }
+
 
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

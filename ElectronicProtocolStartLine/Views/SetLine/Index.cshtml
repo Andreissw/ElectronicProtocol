@@ -4,12 +4,48 @@
     ViewBag.Title = "Index";
 }
 
-<h2> Выберите линию, чтобы создать протокол </h2>
+<div style="display: block; margin:2px;">
+    <div>@Html.ActionLink("Вернутся", "Index","Lot", new { LOTID = Model.LOTID }, htmlAttributes: new { @class = "btn btn-success" })</div>
+    @*<div>  @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = Model.ID, LOTID = Model.LOTID, NameProtocol = Model.NameProtocol, NameOrder = Model.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" }) </div>*@
+</div>
 
-@using (Html.BeginForm("SetLine","SetLine", FormMethod.Post))
+@if (TempData["Err"] != null)
 {
-    @Html.HiddenFor(c=>c.LOTID)
-    @Html.DropDownListFor(model => model.Line, Model.Linelist, htmlAttributes: new { @class = "form-control", style = "max-width:400px; width:400;" })
-    <input type="submit" value="Создать протокол" class="btn btn-success"/>
+    <H2 class="alert btn-danger">
+        @TempData["Err"]
+    </H2>
+}
+
+<h2> Выберите линию, чтобы создать протокол для @Model.Manuf </h2>
+
+@using (Html.BeginForm("SetLine", "SetLine", FormMethod.Post))
+{
+    @Html.HiddenFor(c => c.LOTID)
+    @Html.HiddenFor(c => c.Manuf)
+
+    <div>
+        @Html.Label("Линия")
+        @Html.DropDownListFor(model => model.Line, Model.Linelist, htmlAttributes: new { @class = "form-control", style = "max-width:400px; width:400;" })
+    </div>
+
+    if (Model.Manuf != "Цех Сборки")
+    {
+        <div>
+            @Html.Label("Сторона платы")
+            @Html.DropDownListFor(model => model.TOPBOT, Model.TOPList, htmlAttributes: new { @class = "form-control", style = "max-width:400px; width:400;" })
+        </div>
+    }
+
+
+    @*if (Model.Manuf == "Цех Сборки")
+        {
+            <div>
+                @Html.Label("Готовый протокол СМТ")
+                @Html.DropDownListFor(model => model.Line, Model.Linelist, htmlAttributes: new { @class = "form-control", style = "max-width:400px; width:400;" })
+            </div>
+        }*@
+
+
+    <input type="submit" value="Создать протокол" class="btn btn-success" />
 }
 

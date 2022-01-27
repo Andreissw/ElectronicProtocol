@@ -30,32 +30,26 @@
     }
 
     .block div {
-        border-bottom: 1px solid gray;
+        border-bottom: 0.3px dashed gray;
         margin: 1%;
     }
 </style>
 
-<div>
-    <div class="block">
-        <div> <h3> Имя протокола - @Model.ProtocolName </h3></div>
-        <div> <h3>Заказ - @Model.Order</h3></div>
-    </div>
-</div>
-
-<div style="display: block; margin:5%;">
+<div style="display: block;">
     <div style="margin-bottom:2%">
         <div>   @Html.ActionLink("Вернутся к списку протоколов", "Index", "Lot", new { LOTID = Model.LOTID }, htmlAttributes: new { @class = "btn btn-success", @style = "background-color: lightgray; color:black" })  </div>
         <div>   @Html.ActionLink("Открыть Историю действий по протоколу", "Index", "Log", routeValues: new { ProtocolID = Model.ID, top = true }, htmlAttributes: new { @class = "btn btn-success", @style = "background-color: lightgray; color:black" }) </div>
     </div>
+</div>
 
-    <div>
-        <div>   @Html.ActionLink("Провести проверку TOP", "EditProtocol","Lot", routeValues: new { ID = Model.ID, LOTID = Model.LOTID, TOPBOT = "TOP" }, htmlAttributes: new { @class = "btn btn-success" }) </div>
-        @if (Model.TOBOT)
-        {
-            <div> @Html.ActionLink("Провести проверку BOT", "EditProtocol", "Lot", routeValues: new { ID = Model.ID, LOTID = Model.LOTID, TOPBOT = "BOT" }, htmlAttributes: new { @class = "btn btn-success" }) </div>
-        }
+<div>
+    <div class="block">
+        <div> <h3> Имя протокола: @Model.ProtocolName </h3></div>
+        <div> <h3> Заказ - @Model.Order</h3></div>
     </div>
 </div>
+
+
 
 
 
@@ -64,7 +58,7 @@
         <thead>
 
             <tr>
-                <th colspan="6" style="background-color: gold;">
+                <th colspan="7" style="background-color: gold;">
                     <div style="display: flex; align-items:baseline">
                         <div>
                             <h3>@Model.OTKProtocol.Name</h3> <h3>@Model.OTKProtocol.InfoCount</h3>
@@ -145,6 +139,8 @@
 
 @foreach (var It in Model.Infos)
 {
+    if (It.InfosDetails.Count == 0) { continue; }
+
 <div class="TableManuf">
     <table class="table-hover">
         <thead>
@@ -153,7 +149,7 @@
                 <th colspan="7" style="background-color: gold;">
                     <div style="display:flex;align-items:baseline">
                         <div>
-                            <h3>@It.Name</h3> <h3>@It.InfoCount</h3>
+                            <h3>@It.Name | Линия: @It.InfosDetails.FirstOrDefault().Line | Сторона: @It.InfosDetails.FirstOrDefault().BOTTOB  </h3> <h3>@It.InfoCount</h3>
                         </div>
                         <div style="display:flex">
                             @foreach (var item in It.ListCounts)
@@ -261,9 +257,9 @@
     .TableManuf {
         overflow-y: auto;
         height: 850px;
-        border-bottom: 0.5px solid black;
-        border-top: 0.5px solid black;
-        margin: 1.5%;
+        border-bottom: 0.5px dashed gray;
+        /*border-top: 0.5px solid black;*/
+        margin: 0.5%;
     }
 
         .TableManuf.height {

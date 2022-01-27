@@ -42,6 +42,8 @@ public partial class EP_Log
 
     public Nullable<int> LOTID { get; set; }
 
+    public Nullable<byte> line { get; set; }
+
 
 
     public virtual EP_Protocols EP_Protocols { get; set; }

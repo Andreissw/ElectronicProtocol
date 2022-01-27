@@ -30,6 +30,8 @@ public partial class EP_PGName
 
     public string Type { get; set; }
 
+    public Nullable<byte> line { get; set; }
+
 
 
     public virtual EP_Machine EP_Machine { get; set; }

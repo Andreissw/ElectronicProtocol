@@ -1,6 +1,7 @@
 ﻿using ElectronicProtocolStartLine.Class;
 using ElectronicProtocolStartLine.Class.Monitoring;
 using ElectronicProtocolStartLine.Class.Protocols;
+using ElectronicProtocolStartLine.Class.Protocols.ClassIdentify;
 using ElectronicProtocolStartLine.Models;
 using System;
 using System.Collections.Generic;
@@ -16,75 +17,18 @@ namespace ElectronicProtocolStartLine.Controllers
         FASEntities fas = new FASEntities();
         public ActionResult Index(int LOTID)
         {
-            List<ProtocolTables> protocols = new List<ProtocolTables>();
-            var ListProtocols = new FASEntities().EP_Protocols.Where(c => c.LOTID == LOTID & c.EP_ProtocolsInfo.Select(b=>b.Visible).Contains(true)).OrderByDescending(c => c.DateCreate).Select(c => new 
-            {
-                ID = c.ID, 
-                DateCreate = c.DateCreate, 
-                LOTID = (int)c.LOTID,
-                TOPBOT = c.TOPBOT, 
-                nameprt = c.NameProtocol,
-                IsActiveTOP = c.IsActiveTOP,
-                IsActiveBOT = c.IsActiveBOT,  
-                Line = c.Line,
-            
-            }).ToList();
+         
+            if (Session["Manuf"] == null) return RedirectToAction("Index", "Home");
 
-            if (ListProtocols.Count == 0)  return RedirectToAction("Index","SetLine",new { LOTID = LOTID });
-           
+            IdentifyManuf manuf = new IdentifyManuf(Session["Manuf"].ToString(),LOTID, Session["Service"].ToString());      
 
-            var ServiceName = Session["Service"].ToString();
-            foreach (var item in ListProtocols)
-            {
-                var view = new ViewData();
-                view.GetView(LOTID);
-                ProtocolTables protocolTables = new ProtocolTables()
-                {
-                    LOTID = LOTID,
-                    ID = item.ID,
-                    NameOrder = view.NameOrder,
-                    Type = view.ClientType,
-                    NameProtocol = item.nameprt,
-                    DateCreate = item.DateCreate,
-                    IsActiveBOT = item.IsActiveBOT,
-                    IsActiveTOP = item.IsActiveTOP,
-                    Line = item.Line,
-                    Programms = fas.EP_PGName.Where(b => b.IDProtocol == item.ID).Select(c => new Programms
-                    {
+            var List = manuf.GetListProtocols();
 
-                        Machine = c.EP_Machine.Name,
-                        PGName = c.Name,
+            var R = manuf.GetProtocol.Redirect;
 
-                    }).ToList(),
+            if (List.Count == 0) return RedirectToAction(R.ActionName,R.ControllerName,R.Routes);      
 
-                    TOPBOT = item.TOPBOT == true ? "Двусторонняя плата" : "Односторонняя плата",
-                    TOP = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == item.ID & c.TOPBOT == "TOP" & c.Visible == true).GroupBy(c => c.ProtocolID).Select(c => new TOBOT {
-
-                        TOPBOT = "Вверх платы",
-                        CountAll = c.Where(b => b.EP_TypeVerification.EP_Service.Name == ServiceName).Count(),
-                        CountTrue = c.Where(b => b.Signature == true & b.EP_TypeVerification.EP_Service.Name == ServiceName).Count(),
-                        CountProtocolAll = c.Count(),
-                        CountProtocolTrue = c.Where(b => b.Signature == true).Count(),
-                        IsActive = c.Select(b => b.EP_Protocols.IsActiveTOP).FirstOrDefault()
-
-                    }).FirstOrDefault(),
-
-                    BOT = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == item.ID & c.TOPBOT == "BOT" & c.Visible == true).GroupBy(c => c.ProtocolID).Select(c => new TOBOT
-                    {
-
-                        TOPBOT = "Низ платы",
-                        CountAll = c.Where(b => b.EP_TypeVerification.EP_Service.Name == ServiceName).Count(),
-                        CountTrue = c.Where(b => b.Signature == true & b.EP_TypeVerification.EP_Service.Name == ServiceName).Count(),
-                        CountProtocolAll = c.Count(),
-                        CountProtocolTrue = c.Where(b => b.Signature == true).Count(),
-                        IsActive = c.Select(b => b.EP_Protocols.IsActiveBOT).FirstOrDefault()
-
-                    }).FirstOrDefault(),
-                };
-                protocols.Add(protocolTables);
-            }
-
-            return View(protocols);
+            return View(List);
         }
 
         public ActionResult GetPGName(int ProtocolID, string name, string Protocolname)
@@ -106,10 +50,10 @@ namespace ElectronicProtocolStartLine.Controllers
             return View(programmNames);
         }
 
-        public ActionResult GetReportProtocol(int ID,int LOTID, string NameProtocol, string NameOrder)
+        public ActionResult GetReportProtocol(int ID, int LOTID, string NameProtocol, string NameOrder, byte? Line, string TOPBOT, string Manuf)
         {
             if (Session["UsID"] == null)
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
 
             var Report = new ProtocolReport()
             {
@@ -120,8 +64,12 @@ namespace ElectronicProtocolStartLine.Controllers
                 Order = NameOrder,
             };
 
-            var Result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == ID & c.Visible == true).Select(c => new InfoProtocol()
+            TOPBOT = TOPBOT == "Вверх(TOP)" ? "TOP" : "BOT";
+
+            var Result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == ID & c.Visible == true & (c.line == Line || c.line == null) & (c.TOPBOT == TOPBOT || c.TOPBOT == null) &
+            (c.EP_TypeVerification.Manufacter == Manuf || c.EP_TypeVerification.Manufacter == "Входной контроль")).Select(c => new InfoProtocol()
             {
+                Line = c.line,
                 BOTTOB = c.TOPBOT,
                 Date = fas.EP_Log.Where(b => b.IDProtocol == ID & b.IDVeryf == c.TypeVerifID & b.TOPBOT == c.TOPBOT).OrderByDescending(b => b.Date).FirstOrDefault().Date,
                 Document = fas.EP_TypeDocument.Where(b => fas.EP_TypeVerification.Where(x => x.ID == c.TypeVerifID).FirstOrDefault().TypeDocID == b.ID).FirstOrDefault().Name,
@@ -171,31 +119,26 @@ namespace ElectronicProtocolStartLine.Controllers
             return View(Report);
         }
 
-        public ActionResult EditProtocol(int ID, int LOTID, string TOPBOT)
+        public ActionResult EditProtocol(int ID, int LOTID, string TOPBOT, byte? line)
         {
             if (Session["UsID"] == null)
                 return RedirectToAction("Index");
 
             if (!int.TryParse(Session["UsID"].ToString(), out int userid))
                 return RedirectToAction("Index");
-
           
             var IDService = GetService(userid);
-            GetProtocol protocol = new GetProtocol() { ID = ID, LOTID = LOTID, TOPBOT = TOPBOT };
+            GetProtocol protocol = new GetProtocol() { ID = ID, LOTID = LOTID, TOPBOT = TOPBOT, Manuf = Session["Manuf"].ToString(), Line = line };
 
             var lots = fas.FAS_GS_LOTs.Select(c => new LOTS { FULLOTCODE = c.FULL_LOT_Code, ID = c.LOTID }).ToList();
             lots.AddRange(fas.Contract_LOT.Select(c => new LOTS { FULLOTCODE = c.FullLOTCode, ID = (short)c.ID }));
 
-            var lotid = fas.EP_Protocols.Where(c => c.ID == ID).Select(c => c.LOTID).FirstOrDefault();
-            protocol.NameOrder = lots.Where(c => c.ID == lotid).FirstOrDefault().FULLOTCODE;
-
+            protocol.NameOrder = lots.Where(c => c.ID == LOTID).FirstOrDefault().FULLOTCODE;
             protocol.NameProtocol = fas.EP_Protocols.Where(c => c.ID == ID).FirstOrDefault().NameProtocol;
-
-
 
             var prs = (from inf in fas.EP_ProtocolsInfo
                        join ver in fas.EP_TypeVerification on inf.TypeVerifID equals ver.ID
-                       where inf.ProtocolID == protocol.ID & ver.IDService == IDService & inf.TOPBOT == TOPBOT & inf.Visible == true
+                       where inf.ProtocolID == protocol.ID & ver.IDService == IDService & inf.TOPBOT == TOPBOT & inf.Visible == true & inf.line == line
                        orderby ver.Sort & ver.Num
                        select new DetailsFrom()
                        {
@@ -210,7 +153,6 @@ namespace ElectronicProtocolStartLine.Controllers
                            DateCheck = (DateTime)inf.DateCreate,
                            BOTTOB = ver.TOPBOT,
                            Description = inf.Description,
-
 
                        }).ToList();
 
@@ -255,7 +197,7 @@ namespace ElectronicProtocolStartLine.Controllers
 
         public JsonResult StartProtocol(int idProtocol,int Line,string TOPBOT, int LOTID )
         {
-            ClassProtocol prt = new ClassProtocol(new PrtMon() { ID = idProtocol }, TOPBOT, LOTID);
+            ClassProtocol prt = new ClassProtocol(new PrtMon() { ID = idProtocol , TOPBOT = TOPBOT, LOTID = LOTID});
             var result = prt.Start();
             if (result != "true")
                 return Json(result, JsonRequestBehavior.AllowGet);

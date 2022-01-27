@@ -15,13 +15,13 @@ namespace ElectronicProtocolStartLine.Class.Monitoring
 
         byte? _line { get; set; }
 
-        public ClassProtocol(PrtMon p, string TOPBOT, int LOTID)
+        public ClassProtocol(PrtMon p)
         {
             fas = new FASEntities();
             _protocolID = p.ID;
             _line = p.Line;
-            _topbot = TOPBOT;
-            _lotid = LOTID;
+            _topbot = p.TOPBOT;
+            _lotid = p.LOTID;
         }
 
         public string Start()

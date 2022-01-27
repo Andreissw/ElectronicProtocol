@@ -7,115 +7,109 @@
 }
 <div>@Html.ActionLink("Вернуться назад", "WorkForm", "Home")</div>
 
-@if (Session["UsID"].ToString() != "0")
+@if (Session["UsID"].ToString() != "0" & Session["Manuf"].ToString() != "Входной контроль")
 {
-    <div class="btn btn-success" style="margin-top: 3%; margin-bottom: 2%; background-color: wheat ">@Html.ActionLink("Создать Линию для протокола", "Index", "SetLine", new { LOTID = Model.FirstOrDefault().LOTID }, "")</div>
+    <div style="margin-top: 3%; margin-bottom: 2%;">@Html.ActionLink("Создать протокол", "Index", "SetLine", new { LOTID = Model.FirstOrDefault().LOTID }, new { @class = "btn btn-success", @style = "background-color: green" })</div>
+}
+
+@if (Session["Manuf"].ToString() == "Входной контроль")
+{
+    <div style="margin-top: 3%; margin-bottom: 2%;">@Html.ActionLink("Заполнить протокол", "EditProtocol", "Lot", new { ID = Model.FirstOrDefault().ID, LOTID = Model.FirstOrDefault().LOTID }, new { @class="btn btn-success", @style = "background-color: green" })</div>
 }
 
 <h2>Заказ @Model.FirstOrDefault().NameOrder </h2>
 <div id="mes"></div>
-<div class="block">
-    <table class="table">
 
-        <thead>
+@foreach (var iM in Model.Select(c => c.Manuf).Distinct())
+{
+    <div class="block">
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th colspan="6">
+                        @iM
+                    </th>
+                </tr>
+            </thead>
+
             <tr>
-                <th colspan="6">
-                    Активные протоколы
+                <th>
+                    Имя протокола
+                </th>
+                <th>
+                    Сторона платы
+                </th>
+                <th>
+                    Линия
+                </th>
+                <th>
+                    Программы
+                </th>
+                <th>
+                    Дата создания
+                </th>
+                <th>
+                    Проверка протокола
+                </th>
+                <th style="text-align: center; border-left: 0.3px solid darkgray; ">
+                    Отчёт протокола
                 </th>
             </tr>
-        </thead>
 
-        <tr>
-            <th>
-                Имя протокола
-            </th>
-            <th>
-                Сторона платы
-            </th>
-            <th>
-                Линия
-            </th>
-            <th>
-                Программы
-            </th>
-            <th>
-                Дата создания
-            </th>
-            <th>
-                Проверка протокола
-            </th>
-            <th style="text-align: center; border-left: 0.3px solid darkgray; ">
-                Отчёт протокола
-            </th>
-        </tr>
+            @foreach (var item in Model.Where(b => (b.IsActiveTOP == true || b.IsActiveBOT == true) & b.Manuf == iM))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelitem => item.NameProtocol)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TOPBOT)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelitem => item.Line)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Показать", "GetPGName", "LOT", new { ProtocolID = item.ID, name = item.NameOrder, Protocolname = item.NameProtocol }, new { @class = "btn btn-info", target = "_blank" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateCreate)
+                    </td>
 
-        @foreach (var item in Model.Where(b => b.IsActiveTOP == true || b.IsActiveBOT == true))
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelitem => item.NameProtocol)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TOPBOT)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelitem => item.Line)
-                </td>
-                <td>
-                    @Html.ActionLink("Показать", "GetPGName", "LOT", new { ProtocolID = item.ID, name = item.NameOrder, Protocolname = item.NameProtocol }, new { @class = "btn btn-info", target = "_blank" })
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateCreate)
-                </td>
-                <td>
-                    <div>
-                        @if (item.TOP != null)
+                    <td>
+                        @if (item.InfoTOPBOT.CountAll != 0)
                         {
-                            if (item.TOP.IsActive != false & item.TOP.CountAll != 0)
-                            {
-
+                            <div>
                                 <div style="display:flex">
-                                    <div>@Html.ActionLink($"Проверка Вверх платы {item.TOP.CountTrue} из {item.TOP.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = "TOP" }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
-                                    @*<div><label>По всем службам @item.TOP.CountProtocolTrue из @item.TOP.CountProtocolAll</label></div>*@
+                                    <div>@Html.ActionLink($"Заполнить протокол {item.InfoTOPBOT.CountTrue} из {item.InfoTOPBOT.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = "TOP", line = item.Line }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
                                 </div>
-                            }
+                            </div>
+                        }
+                    </td>
+
+                    <td style="text-align:center; border-left:0.3px solid darkgray;">
+
+                        @if ((Session["Service"].ToString() == "Технический директор" || Session["Service"].ToString() == "Бог") & item.Manuf == "Цех поверхностного монтажа")
+                        {
+                            <div style="margin-bottom:2%;">
+                                <label class="btn btn-success" onclick="StartProtocol(@item.ID, @item.Line,'TOP',@Model.FirstOrDefault().LOTID, '@item.NameProtocol')"> Запустить протокол без проверки Строна Вверх </label>
+                            </div>
+                            <div style="margin-bottom:2%;">
+                                <label class="btn btn-success" onclick="StartProtocol(@item.ID,@item.Line,'BOT',@Model.FirstOrDefault().LOTID, '@item.NameProtocol')"> Запустить протокол без проверки Строна Низ </label>
+                            </div>
                         }
 
-                        @if (item.BOT != null)
-                        {
-                            if (item.BOT.IsActive != false & item.BOT.CountAll != 0)
-                            {
-                                <div style="display:flex">
-                                    <div>@Html.ActionLink($"Проверка Низ платы {item.BOT.CountTrue} из {item.BOT.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = "BOT" }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
-                                    @*<div><label>По всем службам @item.TOP.CountProtocolTrue из @item.TOP.CountProtocolAll</label></div>*@
-                                </div>
-                            }
-                        }
-                    </div>
-
-                </td>
-                <td style="text-align:center; border-left:0.3px solid darkgray;">
-
-                    @if (Session["Service"].ToString() == "Технический директор" || Session["Service"].ToString() == "Бог")
-                    {
-                        <div style="margin-bottom:2%;">
-                            <label class="btn btn-success" onclick="StartProtocol(@item.ID, @item.Line,'TOP',@Model.FirstOrDefault().LOTID, '@item.NameProtocol')"> Запустить протокол без проверки Строна Вверх </label>
+                        <div>
+                            @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, NameProtocol = item.NameProtocol, NameOrder = item.NameOrder, Line = item.Line, TOPBOT = item.TOPBOT, Manuf = item.Manuf }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" })
                         </div>
-                        <div style="margin-bottom:2%;">
-                            <label class="btn btn-success" onclick="StartProtocol(@item.ID,@item.Line,'BOT',@Model.FirstOrDefault().LOTID, '@item.NameProtocol')"> Запустить протокол без проверки Строна Низ </label>
-                        </div>
-                    }
+                    </td>
 
-                    <div>
-                        @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, NameProtocol = item.NameProtocol, NameOrder = item.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" })
-                    </div>
-                </td>
+                </tr>
+            }
 
-            </tr>
-        }
-
-    </table>
-</div>
+        </table>
+    </div>
+}
 
 <script>
     function StartProtocol(idPrt, Line ,TOPBOT, LOTID, NameProtocol) {
