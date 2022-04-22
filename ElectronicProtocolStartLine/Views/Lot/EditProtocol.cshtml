@@ -15,7 +15,7 @@
 
 <div style="display: block; margin:2px;">
     <div>@Html.ActionLink("Перейти к списку протоколов", "Index", new { LOTID = Model.LOTID }, htmlAttributes: new { @class = "btn btn-success" })</div>
-    <div>@Html.ActionLink("Перейти к списку Заказов", "WorkForm", "Home", htmlAttributes: new { @class = "btn btn-success" })</div>
+    <div>@Html.ActionLink("Перейти к списку Заказов", "WorkForm", "Home","",htmlAttributes: new { @class = "btn btn-success" })</div>
     @*<div>  @Html.ActionLink("Открыть отчёт по протоколу", "GetReportProtocol", "Lot", new { ID = Model.ID, LOTID = Model.LOTID, NameProtocol = Model.NameProtocol, NameOrder = Model.NameOrder }, new { @class = "btn btn-success", @style = "background-color: gold; color:black;" }) </div>*@
 </div>
 
@@ -52,7 +52,7 @@
                     @foreach (var item in ListItem.Details)
                     {
 
-                        using (Html.BeginForm("EditDetails", "Home", new { IDItem = item.ID, ProtocolID = Model.ID, TOPBOT = Model.TOPBOT, LOTID = Model.LOTID, Line = Model.Line}, FormMethod.Post,""))
+                        using (Html.BeginForm("EditDetails", "Home", new { IDItem = item.ID, ProtocolID = Model.ID, TOPBOT = Model.TOPBOT, LOTID = Model.LOTID, Line = Model.Line, Manuf = Model.Manuf}, FormMethod.Post,""))
                         {                             
                            
                             @*<div style=" display: inline-flex; align-items:center; margin: 1%; ">*@

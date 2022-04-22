@@ -20,7 +20,10 @@ namespace ElectronicProtocolStartLine.Class.Protocols
         public TOBOT InfoTOPBOT { get; set; }
         public bool IsActiveTOP { get; set; }
         public bool IsActiveBOT { get; set; }
-        public byte? Line { get; set; }     
+        public byte? Line { get; set; }   
+        public int Start { get; set; }
+
+        public short? Iter { get; set; }
 
     }
 

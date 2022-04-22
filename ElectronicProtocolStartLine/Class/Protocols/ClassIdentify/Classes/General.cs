@@ -15,7 +15,7 @@ namespace ElectronicProtocolStartLine.Class.Protocols.ClassIdentify.Classes
 
         public General()
         {
-            Redirect = new Redirect() { ActionName = "Index", ControllerName = "Home"};
+            Redirect = new Redirect() { ActionName = "WorkForm", ControllerName = "Home" };
         }       
     }
 }

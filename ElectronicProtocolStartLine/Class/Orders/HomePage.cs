@@ -34,7 +34,11 @@ namespace ElectronicProtocolStartLine.Class.Orders
 
         public DateTime DateCreate { get; set; }
 
-        public bool IsActive { get; set; }       
+        public bool IsActive { get; set; }  
+        
+        public bool IsFAS { get; set; }
+
+        public bool IsSMT { get; set; }
         
     }
    

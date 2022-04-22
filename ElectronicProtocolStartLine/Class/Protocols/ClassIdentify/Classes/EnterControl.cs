@@ -15,7 +15,7 @@ namespace ElectronicProtocolStartLine.Class.Protocols.ClassIdentify.Classes
         public EnterControl()
         {
             //var protocolID = Fas.EP_Protocols.Where(c => c.LOTID == LOTID).Select(c => c.ID).FirstOrDefault();
-            Redirect = new Redirect() { ActionName = "EditProtocol", ControllerName = "Lot" };
+            Redirect = new Redirect() { ActionName = "WorkForm", ControllerName = "Home" };
         }
        
     }

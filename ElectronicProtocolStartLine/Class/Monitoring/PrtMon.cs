@@ -18,6 +18,8 @@ namespace ElectronicProtocolStartLine.Class.Monitoring
         public string TOPBOT { get; set; }
         public string NameProtocol { get; set; }
 
+        public short? Iter { get; set; }
+
         public byte? Line { get;set; }
 
     }

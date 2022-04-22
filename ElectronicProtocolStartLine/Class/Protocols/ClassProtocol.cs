@@ -26,7 +26,7 @@ namespace ElectronicProtocolStartLine.Class.Monitoring
 
         public string Start()
         {
-            var FujiPG = fas.EP_PGName.Where(c => c.IDProtocol == _protocolID & c.EP_Protocols.Line == _line & c.IDMachine == 4 & c.Type == _topbot).Select(c => c.Name).FirstOrDefault();
+            var FujiPG = fas.EP_PGName.Where(c => c.IDProtocol == _protocolID & c.IDMachine == 4 & c.Type == _topbot).Select(c => c.Name).FirstOrDefault();
             if (FujiPG == null)
                 return $"Не найдена программа в таблице EP_PGName по протоколу с униальным номером ProtocolID {_protocolID}, Линия {_line} , IDMachine {4}, Сторона {_topbot}";
 

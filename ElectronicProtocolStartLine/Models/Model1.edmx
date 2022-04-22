@@ -88,6 +88,7 @@
           <Property Name="DocumentID" Type="int" />
           <Property Name="LOTID" Type="int" />
           <Property Name="line" Type="tinyint" />
+          <Property Name="Iter" Type="smallint" />
         </EntityType>
         <EntityType Name="EP_Machine">
           <Key>
@@ -1006,6 +1007,7 @@
           <NavigationProperty Name="EP_StepLog" Relationship="FASModel.fk_idStep" FromRole="EP_Log" ToRole="EP_StepLog" />
           <Property Name="LOTID" Type="Int32" />
           <Property Name="line" Type="Byte" />
+          <Property Name="Iter" Type="Int16" />
         </EntityType>
         <EntityType Name="EP_Protocols">
           <Key>
@@ -1383,6 +1385,7 @@
           <EntitySetMapping Name="EP_Log">
             <EntityTypeMapping TypeName="FASModel.EP_Log">
               <MappingFragment StoreEntitySet="EP_Log">
+                <ScalarProperty Name="Iter" ColumnName="Iter" />
                 <ScalarProperty Name="line" ColumnName="line" />
                 <ScalarProperty Name="LOTID" ColumnName="LOTID" />
                 <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />

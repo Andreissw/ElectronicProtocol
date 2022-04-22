@@ -205,7 +205,7 @@ namespace ElectronicProtocolStartLine
                     
                 };
 
-                fas.EP_Log.Add(log);                
+                //fas.EP_Log.Add(log);                
             }
         }
 

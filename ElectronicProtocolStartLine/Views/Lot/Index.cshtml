@@ -7,7 +7,7 @@
 }
 <div>@Html.ActionLink("Вернуться назад", "WorkForm", "Home")</div>
 
-@if (Session["UsID"].ToString() != "0" & Session["Manuf"].ToString() != "Входной контроль")
+@if (Session["UsID"].ToString() != "0" & Session["Manuf"].ToString() != "Входной контроль" & Session["Manuf"].ToString() != "Общий")
 {
     <div style="margin-top: 3%; margin-bottom: 2%;">@Html.ActionLink("Создать протокол", "Index", "SetLine", new { LOTID = Model.FirstOrDefault().LOTID }, new { @class = "btn btn-success", @style = "background-color: green" })</div>
 }
@@ -38,6 +38,9 @@
                     Имя протокола
                 </th>
                 <th>
+                    № 
+                </th>
+                <th>
                     Сторона платы
                 </th>
                 <th>
@@ -52,6 +55,9 @@
                 <th>
                     Проверка протокола
                 </th>
+               <th>
+                   Статус протокола
+               </th>
                 <th style="text-align: center; border-left: 0.3px solid darkgray; ">
                     Отчёт протокола
                 </th>
@@ -62,6 +68,9 @@
                 <tr>
                     <td>
                         @Html.DisplayFor(modelitem => item.NameProtocol)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Iter)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TOPBOT)
@@ -81,9 +90,24 @@
                         {
                             <div>
                                 <div style="display:flex">
-                                    <div>@Html.ActionLink($"Заполнить протокол {item.InfoTOPBOT.CountTrue} из {item.InfoTOPBOT.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = "TOP", line = item.Line }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
+                                    <div>@Html.ActionLink($"Заполнить протокол {item.InfoTOPBOT.CountTrue} из {item.InfoTOPBOT.CountAll}", "EditProtocol", new { ID = item.ID, LOTID = Model.FirstOrDefault().LOTID, TOPBOT = item.TOPBOT, line = item.Line, Manuf = item.Manuf }, new { @class = "btn btn-success", @style = "background-color: lightblue; color:black;" })</div>
                                 </div>
                             </div>
+                        }
+                    </td>
+
+                    <td>
+                        @if (item.Start == 0)
+                        {
+                            <label class="btn btn-success"> Протокол активирован </label>
+                            if (Session["Service"].ToString() == "Начальник ЦПМ" || Session["Service"].ToString() == "Начальник ТОУП" || Session["Service"].ToString() == "ТОУП SMT")
+                            {
+                                <label class="btn btn-success" onclick="CopyProtocol(@item.ID, @item.Line,'@item.InfoTOPBOT.TOPBOT', @item.Iter)"> Создать копию нового протокола </label>
+                            }
+                        }
+                        else
+                        {
+                            <label class="btn btn-success" style="background-color:lightcoral"> Протокол Не активирован </label>
                         }
                     </td>
 
@@ -112,6 +136,26 @@
 }
 
 <script>
+
+    function CopyProtocol(idPrt, Line, TOPBOT,itter) {
+        if (!confirm("Уверены, что хотите создать копию протокола")) return;
+
+         $.ajax({
+
+            url: '@Url.Action("CopyProtoocol", "Lot")',
+            dataType: "json",
+             data: { idProtocol: idPrt, Line: Line, TOPBOT: TOPBOT, itter: itter},
+            success: function (message) {
+                    MessageGet(message, "style='background-color: lightgreen'");               
+            }
+        })
+
+        function MessageGet(message, style) {
+            document.getElementById('mes').innerHTML = "<label " + style + ">" + message + "</label>"
+        }
+
+    }
+
     function StartProtocol(idPrt, Line ,TOPBOT, LOTID, NameProtocol) {
         if (!confirm("Уверены, что хотите запустить протокол без проверки?")) return;
 

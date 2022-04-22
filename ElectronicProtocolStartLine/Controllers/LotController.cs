@@ -17,17 +17,27 @@ namespace ElectronicProtocolStartLine.Controllers
         FASEntities fas = new FASEntities();
         public ActionResult Index(int LOTID)
         {
-         
+            //Проверка сессии на пустоту, если да, то перенаправление на форму авторизации
             if (Session["Manuf"] == null) return RedirectToAction("Index", "Home");
 
+            //Идентификация службы, которая открывает протоколы в заказе
             IdentifyManuf manuf = new IdentifyManuf(Session["Manuf"].ToString(),LOTID, Session["Service"].ToString());      
 
+            //Открытие списка протоколов для службы
             var List = manuf.GetListProtocols();
 
-            var R = manuf.GetProtocol.Redirect;
+            //Запись в переменную перенаправленную страницу в случае ошибки
+            var R = manuf.GetProtocol.Redirect;            
 
-            if (List.Count == 0) return RedirectToAction(R.ActionName,R.ControllerName,R.Routes);      
+            //Если список протоколов пуст для службы
+            if (List.Count == 0) {
+                //Сообщение
+                TempData["Mess"] = $"В заказе {manuf.OrderName} нет созданных ранее протоколов на проверку";
+                //Перенаправление на страницу для службы
+                return RedirectToAction(R.ActionName, R.ControllerName, R.Routes);
+            }     
 
+            //открытие протоколов у заказа
             return View(List);
         }
 
@@ -52,9 +62,11 @@ namespace ElectronicProtocolStartLine.Controllers
 
         public ActionResult GetReportProtocol(int ID, int LOTID, string NameProtocol, string NameOrder, byte? Line, string TOPBOT, string Manuf)
         {
+            //Проверка сессии на пустоту
             if (Session["UsID"] == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); // Перенаправление на форму авторизации
 
+            //Создание экземпляра класса,которая служит моделью  для представление
             var Report = new ProtocolReport()
             {
                 ID = ID,
@@ -64,8 +76,10 @@ namespace ElectronicProtocolStartLine.Controllers
                 Order = NameOrder,
             };
 
+            //Определение стороны платы
             TOPBOT = TOPBOT == "Вверх(TOP)" ? "TOP" : "BOT";
 
+            //Забираем актуальные данные с SQL по каждой проверки текущего протокола
             var Result = fas.EP_ProtocolsInfo.Where(c => c.ProtocolID == ID & c.Visible == true & (c.line == Line || c.line == null) & (c.TOPBOT == TOPBOT || c.TOPBOT == null) &
             (c.EP_TypeVerification.Manufacter == Manuf || c.EP_TypeVerification.Manufacter == "Входной контроль")).Select(c => new InfoProtocol()
             {
@@ -83,8 +97,11 @@ namespace ElectronicProtocolStartLine.Controllers
 
             }).ToList();
 
+            //Записываем актуальные данные во входной контроль
             Report.OTKProtocol.InfosDetails.AddRange(Result.Where(c => c.Manuf == "Входной контроль").OrderBy(c => c.Service));
+            //записываем сколько проверок пройдено из проверок всего ( 2 pass из 2 всего )
             Report.OTKProtocol.InfoCount = $"Выполнено проверок {Report.OTKProtocol.InfosDetails.Where(c => c.Signature).Count()} из { Report.OTKProtocol.InfosDetails.Count}";
+            //расписываем сколько каких типов проверок
             Report.OTKProtocol.ListCounts.Add(new Counts()
             {
                 CountOK = Report.OTKProtocol.InfosDetails.Where(b => b.Result == "OK").Count(),
@@ -93,7 +110,7 @@ namespace ElectronicProtocolStartLine.Controllers
 
             });
 
-
+            //Записываем актуальные данные в ЦехПоверностногоМонтажа
             Report.ListInfoSMT.InfosDetails.AddRange(Result.Where(c => c.Manuf == "Цех поверхностного монтажа"));
             Report.ListInfoSMT.InfoCount = $"Выполнено проверок {Report.ListInfoSMT.InfosDetails.Where(c => c.Signature).Count()} из { Report.ListInfoSMT.InfosDetails.Count}";
             Report.ListInfoSMT.ListCounts = new List<string>() { "TOP", "BOT" }.Select(c => new Counts()
@@ -105,6 +122,7 @@ namespace ElectronicProtocolStartLine.Controllers
 
             }).ToList();
 
+            //Записываем актуальные данные в Цех Сборки
             Report.ListInfoFAS.InfosDetails.AddRange(Result.Where(c => c.Manuf == "Цех Сборки"));
             Report.ListInfoFAS.InfoCount = $"Выполнено проверок {Report.ListInfoFAS.InfosDetails.Where(c => c.Signature).Count()} из { Report.ListInfoFAS.InfosDetails.Count}";
             Report.ListInfoFAS.ListCounts.Add(new Counts()
@@ -115,30 +133,45 @@ namespace ElectronicProtocolStartLine.Controllers
 
             });
 
-
+            //Открытие представление (страницы) с моделью Report
             return View(Report);
         }
 
-        public ActionResult EditProtocol(int ID, int LOTID, string TOPBOT, byte? line)
-        {
-            if (Session["UsID"] == null)
-                return RedirectToAction("Index");
 
+        public ActionResult EditProtocol(int ID, int LOTID, string TOPBOT, byte? line, string Manuf)
+        {
+            //Проверка сессии на пустоту
+            if (Session["UsID"] == null)
+                return RedirectToAction("Index");// Перенаправление на форму авторизации
+
+            //Проверка преобразования userID с Сессии
             if (!int.TryParse(Session["UsID"].ToString(), out int userid))
-                return RedirectToAction("Index");
+                return RedirectToAction("Index");//Преобразование не удалось, форма авторизации
+
+            //Определение стороны протокола
+            TOPBOT = TOPBOT == "Низ(BOT)" ? "BOT" : "TOP";
           
+            //Получаем службу по UserID
             var IDService = GetService(userid);
+
+            //Инициализируем модель для представления
             GetProtocol protocol = new GetProtocol() { ID = ID, LOTID = LOTID, TOPBOT = TOPBOT, Manuf = Session["Manuf"].ToString(), Line = line };
 
+            //Достём с БД список заказов с двух таблиц и объединяем.
             var lots = fas.FAS_GS_LOTs.Select(c => new LOTS { FULLOTCODE = c.FULL_LOT_Code, ID = c.LOTID }).ToList();
             lots.AddRange(fas.Contract_LOT.Select(c => new LOTS { FULLOTCODE = c.FullLOTCode, ID = (short)c.ID }));
 
+            //Записываем имя заказа
             protocol.NameOrder = lots.Where(c => c.ID == LOTID).FirstOrDefault().FULLOTCODE;
+            //записываем имя протокола
             protocol.NameProtocol = fas.EP_Protocols.Where(c => c.ID == ID).FirstOrDefault().NameProtocol;
 
+            //Выгружаем данные по протоколу
             var prs = (from inf in fas.EP_ProtocolsInfo
                        join ver in fas.EP_TypeVerification on inf.TypeVerifID equals ver.ID
-                       where inf.ProtocolID == protocol.ID & ver.IDService == IDService & inf.TOPBOT == TOPBOT & inf.Visible == true & inf.line == line
+                       where inf.ProtocolID == protocol.ID & ver.IDService == IDService & inf.TOPBOT == TOPBOT 
+                       & inf.Visible == true & inf.line == line & inf.EP_TypeVerification.Manufacter == Manuf
+
                        orderby ver.Sort & ver.Num
                        select new DetailsFrom()
                        {
@@ -156,10 +189,12 @@ namespace ElectronicProtocolStartLine.Controllers
 
                        }).ToList();
 
+            //Распределяем данные по цехам в модели данных
             protocol.protocolFAS.Details.AddRange(SetDetail(prs, "Цех Сборки"));
             protocol.protocolSMT.Details.AddRange(SetDetail(prs, "Цех поверхностного монтажа"));
             protocol.ProtocolOTK.Details.AddRange(SetDetail(prs, "Входной контроль"));
 
+            //Открываем представление с моделью 
             return View(protocol);
         }
         int GetService(int UserID)
@@ -193,6 +228,40 @@ namespace ElectronicProtocolStartLine.Controllers
             }
 
             return d;
+        }
+
+        public JsonResult CopyProtoocol(int idProtocol, int Line, string TOPBOT,  short? itter)
+        {
+            //Берем с БД даннеы по протоколу, который хотим продублировать
+            var p = fas.EP_ProtocolsInfo.Where(b => b.ProtocolID == idProtocol & b.line == Line & b.TOPBOT == TOPBOT & b.Itter == itter).Select(c => new PrtMon()
+            {
+                Manufacter = c.EP_TypeVerification.Manufacter,
+                ID = c.ProtocolID,
+                LOTID = c.EP_Protocols.LOTID,
+                IsStartStatusTOP = c.EP_Protocols.StartStatusTOP,
+                IsStartStatusBOT = (bool)c.EP_Protocols.StartStatusBOT,
+                IsActiveTOP =c.EP_Protocols.IsActiveTOP,
+                IsActiveBOT = c.EP_Protocols.IsActiveBOT,
+                Line = (byte)c.line,
+                TOPBOT = c.TOPBOT,
+                NameProtocol = c.EP_Protocols.NameProtocol,
+                Iter = c.Itter
+            }).FirstOrDefault();
+
+            //Выгружаем данные по заказу
+            ViewData view = new ViewData();
+            view.GetView(p.LOTID);
+
+
+            //Инициализируем класс создание протокола
+            CreateProtocol _cp = new CreateProtocol() { prtMon = p, Order = view.NameOrder };
+            //Получаем кол-во дубликатов данного протокола
+            _cp.GetCountProtocols();
+            //Дублируем протокол
+            _cp.AddInfo();           
+
+            //Возвращаем Json
+            return Json("Протокол создан", JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult StartProtocol(int idProtocol,int Line,string TOPBOT, int LOTID )

@@ -15,7 +15,7 @@ namespace ElectronicProtocolStartLine.Class
         {
             var view = AlternateView.CreateAlternateViewFromString(Content, Encoding.UTF8, MediaTypeNames.Text.Html);
 
-            var listemails = new FASEntities().EP_Email.Where(c => c.Type == "ПДУ").Select(c => c.Email);
+            var listemails = new FASEntities().EP_Email.Where(c => c.Type == "Фуджи").Select(c => c.Email);
 
             using (var client = new SmtpClient("mail.technopolis.gs", 25)) // Set properties as needed or use config file
             using (MailMessage message = new MailMessage()
@@ -30,7 +30,8 @@ namespace ElectronicProtocolStartLine.Class
             {
                 message.AlternateViews.Add(view);
                 message.From = new MailAddress("reporter@dtvs.ru", "ROBOT");
-                message.CC.Add("a.volodin@dtvs.ru");
+                //message.CC.Add("a.volodin@dtvs.ru");
+                foreach (var item in listemails) message.CC.Add(item);
                 //message.CC.Add("Лишик Станислав Александрович <lishik@dtvs.ru>");
                 //message.CC.Add("Мелехин Константин Данилович <melekhin@dtvs.ru>");
                 //message.CC.Add("Овчинников Дмитрий Игоревич <ovchinnikov@dtvs.ru>");

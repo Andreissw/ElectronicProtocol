@@ -44,6 +44,8 @@ public partial class EP_Log
 
     public Nullable<byte> line { get; set; }
 
+    public Nullable<short> Iter { get; set; }
+
 
 
     public virtual EP_Protocols EP_Protocols { get; set; }

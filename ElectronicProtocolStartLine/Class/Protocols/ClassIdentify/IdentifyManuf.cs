@@ -14,6 +14,7 @@ namespace ElectronicProtocolStartLine.Class.Protocols.ClassIdentify
         public int LOTID { get; set; }
         public int ProtocolID { get; set; }
         
+        public string OrderName { get; set; }
         string ServiceName { get; set; }
 
         public IGetmanufProtocol GetProtocol { get; set; }
@@ -22,6 +23,7 @@ namespace ElectronicProtocolStartLine.Class.Protocols.ClassIdentify
         public IdentifyManuf(string Manuf, int LOTID, string ServiceName)
         {           
             this.LOTID = LOTID;
+            OrderName = GetNameOrder();
             this.ServiceName = ServiceName;
             GetProtocol = getmanufProtocol(Manuf);
             var protocolID = Fas.EP_Protocols.Where(c => c.LOTID == LOTID).Select(c => c.ID).FirstOrDefault();
@@ -44,13 +46,19 @@ namespace ElectronicProtocolStartLine.Class.Protocols.ClassIdentify
 
         }
 
+        string GetNameOrder()
+        {
+            return Fas.Contract_LOT.Select(b => new { ID = b.ID, Name = b.FullLOTCode }).Union(Fas.FAS_GS_LOTs.Select(b => new { ID = (int)b.LOTID, Name = b.FULL_LOT_Code })).
+                Where(c=>c.ID == LOTID).Select(b=>b.Name).FirstOrDefault();
+        }
+
         public List<ProtocolTables> GetListProtocols()
         {
             var view = new ViewData();
             view.GetView(LOTID);
 
             return Fas.EP_ProtocolsInfo.Where(c => c.EP_Protocols.LOTID == LOTID & c.EP_TypeVerification.Manufacter != "Входной контроль" & c.Visible == true)
-                .GroupBy(c => new { ProtocolID = c.ProtocolID, line = c.line, TOPBOT = c.TOPBOT, Manuf = c.EP_TypeVerification.Manufacter }).Select(c => new ProtocolTables
+                .GroupBy(c => new { ProtocolID = c.ProtocolID, line = c.line, TOPBOT = c.TOPBOT, Manuf = c.EP_TypeVerification.Manufacter, itter = c.Itter }).Select(c => new ProtocolTables
                 {
                     LOTID = c.Select(b => b.EP_Protocols).FirstOrDefault().LOTID,
                     ID = c.Key.ProtocolID,
@@ -79,8 +87,9 @@ namespace ElectronicProtocolStartLine.Class.Protocols.ClassIdentify
                         CountProtocolTrue = c.Where(x => x.Signature == true).Count(),
 
                     }).FirstOrDefault(),
-
-                }).ToList();
+                    Start = c.Where(b => b.Start == false & !new List<int?>() { 11, 10 }.Contains(b.EP_TypeVerification.IDService)).Select(b => b.Result).Where(b => b == null || b == "NOK").Count(),
+                    Iter = c.Key.itter,
+        }).ToList();
         }
     }
 }
